@@ -1,0 +1,473 @@
+<!-- HTML comment -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wether App</title> <!-- Tab Title -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #b7eef5 0%, #72bad9 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Main container */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        /* Search section panel */
+        .search-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-panel input {
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            width: 300px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+
+        .search-panel input:focus {
+            outline: none;
+            border-color: #72bad9;
+            box-shadow: 0 0 10px rgba(114,186,217,0.3);
+        }
+
+        .search-panel button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-panel button:hover {
+            transform: scale(1.05);
+            background: #ff5252;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Panels grid container - allows scrolling */
+        .panels-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 20px 10px 30px 10px;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar styling */
+        .panels-container::-webkit-scrollbar {
+            height: 12px;
+        }
+
+        .panels-container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+
+        .panels-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+        }
+
+        .panels-container::-webkit-scrollbar-thumb:hover {
+            background: white;
+        }
+
+        /* Individual panel styles - different sizes and colors */
+        .panel {
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .panel:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Panel size and color variations */
+        .panel-small {
+            width: 250px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .panel-medium {
+            width: 320px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .panel-large {
+            width: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .panel-dark {
+            width: 280px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+        }
+
+        .panel-warm {
+            width: 300px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .panel-cool {
+            width: 350px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        /* Panel content styling */
+        .panel h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        .panel .temp {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .panel .description {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .panel .extra-info {
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Scroll buttons */
+        .scroll-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .scroll-btn {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .scroll-btn:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        /* Weather result section */
+        .weather-result {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .panel-small, .panel-medium, .panel-large, .panel-dark, .panel-warm, .panel-cool {
+                width: 260px;
+            }
+            
+            .search-panel input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1> Wether App</h1>
+        <div class="subtitle">Learn about today's weather conditions!</div>
+
+        <!-- Search Panel -->
+        <div class="search-panel">
+            <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, Seattle, Dubai)">
+            <button onclick="getWeather()">Get Weather</button>
+        </div>
+
+        <!-- Scrollable Panels Container -->
+        <div class="panels-container" id="panelsContainer">
+            <!-- Panel 1 - Small -->
+            <div class="panel panel-small">
+                <h3> Current Temp</h3>
+                <div class="temp">--°C</div>
+                <div class="description">Click "Get Weather"</div>
+                <div class="extra-info">Feels like: --°C</div>
+            </div>
+
+            <!-- Panel 2 - Medium -->
+            <div class="panel panel-medium">
+                <h3> Humidity</h3>
+                <div class="temp">--%</div>
+                <div class="description">Moisture Level</div>
+                <div class="extra-info">Comfort: --</div>
+            </div>
+
+            <!-- Panel 3 - Large -->
+            <div class="panel panel-large">
+                <h3> Wind Speed</h3>
+                <div class="temp">-- km/h</div>
+                <div class="description">Wind Direction</div>
+                <div class="extra-info">Gusts: -- km/h</div>
+            </div>
+
+            <!-- Panel 4 - Cool -->
+            <div class="panel panel-cool">
+                <h3> Forecast</h3>
+                <div class="temp">3-Day</div>
+                <div class="description">Upcoming weather forecast</div>
+                <div class="extra-info">More details soon</div>
+            </div>
+        </div>
+
+        <!-- Scroll Buttons -->
+        <div class="scroll-buttons">
+            <button class="scroll-btn" onclick="scrollPanels('left')">◀ Scroll Left</button>
+            <button class="scroll-btn" onclick="scrollPanels('right')">Scroll Right ▶</button>
+        </div>
+
+        <!-- Weather Result Display -->
+        <div id="weatherResult" class="weather-result" style="display: none;">
+            <h2 id="cityName"></h2>
+            <div class="temp" id="temperature"></div>
+            <div id="description"></div>
+            <div id="humidity"></div>
+        </div>
+        
+        <div id="errorMessage" style="color: #ff6b6b; margin-top: 20px; text-align: center;"></div>
+    </div>
+
+    <script>
+        /*  This is a demo version using mock data,
+            Open-meteo API integration coming soon...
+        */
+        
+        // Complete mock weather data for all cities
+        const mockWeatherData = {
+            // Original cities
+            'london': { 
+                temp: '12°C', feelsLike: '10°C', desc: 'Cloudy', humidity: '78%',
+                wind: '15 km/h', windDir: 'NW', uv: '3', sunrise: '06:45', sunset: '19:30'
+            },
+            'new york': { 
+                temp: '18°C', feelsLike: '17°C', desc: 'Sunny', humidity: '65%',
+                wind: '12 km/h', windDir: 'SW', uv: '5', sunrise: '06:30', sunset: '19:15'
+            },
+            'tokyo': { 
+                temp: '22°C', feelsLike: '24°C', desc: 'Clear skies', humidity: '55%',
+                wind: '8 km/h', windDir: 'E', uv: '7', sunrise: '05:45', sunset: '18:30'
+            },
+            'paris': { 
+                temp: '15°C', feelsLike: '14°C', desc: 'Light rain', humidity: '82%',
+                wind: '20 km/h', windDir: 'N', uv: '2', sunrise: '07:00', sunset: '20:00'
+            },
+            'sydney': { 
+                temp: '25°C', feelsLike: '27°C', desc: 'Hot and sunny', humidity: '45%',
+                wind: '18 km/h', windDir: 'SE', uv: '8', sunrise: '06:15', sunset: '19:45'
+            },
+            
+            // US Cities
+            'seattle': { 
+                temp: '14°C', feelsLike: '13°C', desc: 'Drizzly', humidity: '85%',
+                wind: '10 km/h', windDir: 'SW', uv: '2', sunrise: '06:50', sunset: '19:40'
+            },
+            'los angeles': { 
+                temp: '24°C', feelsLike: '25°C', desc: 'Perfect beach weather', humidity: '55%',
+                wind: '8 km/h', windDir: 'W', uv: '8', sunrise: '06:25', sunset: '19:10'
+            },
+            'houston': { 
+                temp: '28°C', feelsLike: '31°C', desc: 'Hot and humid', humidity: '75%',
+                wind: '12 km/h', windDir: 'S', uv: '7', sunrise: '06:40', sunset: '19:35'
+            },
+            'washington dc': { 
+                temp: '20°C', feelsLike: '19°C', desc: 'Partly cloudy', humidity: '60%',
+                wind: '14 km/h', windDir: 'N', uv: '5', sunrise: '06:35', sunset: '19:25'
+            },
+            'miami': { 
+                temp: '29°C', feelsLike: '33°C', desc: 'Tropical paradise', humidity: '80%',
+                wind: '16 km/h', windDir: 'SE', uv: '9', sunrise: '06:55', sunset: '19:50'
+            },
+            
+            // European Cities
+            'berlin': { 
+                temp: '11°C', feelsLike: '9°C', desc: 'Overcast', humidity: '72%',
+                wind: '18 km/h', windDir: 'W', uv: '2', sunrise: '06:15', sunset: '19:55'
+            },
+            'moscow': { 
+                temp: '6°C', feelsLike: '3°C', desc: 'Cold and breezy', humidity: '68%',
+                wind: '22 km/h', windDir: 'N', uv: '1', sunrise: '05:30', sunset: '19:00'
+            },
+            
+            // Middle East
+            'dubai': { 
+                temp: '35°C', feelsLike: '40°C', desc: 'Scorching hot', humidity: '40%',
+                wind: '12 km/h', windDir: 'NW', uv: '10', sunrise: '06:00', sunset: '18:45'
+            },
+            
+            // Asian Cities
+            'singapore': { 
+                temp: '30°C', feelsLike: '34°C', desc: 'Thunderstorms possible', humidity: '85%',
+                wind: '8 km/h', windDir: 'NE', uv: '8', sunrise: '07:05', sunset: '19:15'
+            },
+            'hong kong': { 
+                temp: '26°C', feelsLike: '28°C', desc: 'Humid and hazy', humidity: '82%',
+                wind: '14 km/h', windDir: 'E', uv: '6', sunrise: '06:20', sunset: '18:50'
+            },
+            'beijing': { 
+                temp: '16°C', feelsLike: '15°C', desc: 'Smoggy', humidity: '58%',
+                wind: '10 km/h', windDir: 'N', uv: '4', sunrise: '05:55', sunset: '18:40'
+            },
+            'seoul': { 
+                temp: '17°C', feelsLike: '16°C', desc: 'Cherry blossom season', humidity: '62%',
+                wind: '11 km/h', windDir: 'W', uv: '5', sunrise: '06:10', sunset: '19:05'
+            }
+        };
+        
+        function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            
+            if (!city) {
+                showError('Please enter a city name!');
+                return;
+            }
+            
+            const cityLower = city.toLowerCase();
+            let weather;
+            
+            if (mockWeatherData[cityLower]) {
+                weather = mockWeatherData[cityLower];
+                document.getElementById('errorMessage').innerHTML = '';
+            } else {
+                // Default fake data for unknown cities
+                weather = {
+                    temp: '22°C', feelsLike: '21°C', desc: 'Partly cloudy', humidity: '70%',
+                    wind: '10 km/h', windDir: 'Variable', uv: '4', sunrise: '06:30', sunset: '19:00'
+                };
+                document.getElementById('errorMessage').innerHTML = 'Note: You typed a city not on the list, but don\'t worry the open-meteo API is coming soon, fake data is shown in the meantime!';
+            }
+            
+            displayWeather(city, weather);
+            updatePanels(weather);
+        }
+        
+        function displayWeather(city, weather) {
+            document.getElementById('cityName').textContent = city.toUpperCase();
+            document.getElementById('temperature').textContent = weather.temp;
+            document.getElementById('description').textContent = weather.desc;
+            document.getElementById('humidity').textContent = `Humidity: ${weather.humidity}`;
+            document.getElementById('weatherResult').style.display = 'block';
+        }
+        
+        function updatePanels(weather) {
+            const panels = document.querySelectorAll('.panel');
+            
+            // Update Panel 1 - Temperature
+            panels[0].querySelector('.temp').textContent = weather.temp;
+            panels[0].querySelector('.extra-info').textContent = `Feels like: ${weather.feelsLike}`;
+            
+            // Update Panel 2 - Humidity
+            panels[1].querySelector('.temp').textContent = weather.humidity;
+            let humidityValue = parseInt(weather.humidity);
+            let comfort = humidityValue > 70 ? 'Humid' : (humidityValue < 40 ? 'Dry' : 'Comfortable');
+            panels[1].querySelector('.extra-info').textContent = `Comfort: ${comfort}`;
+            
+            // Update Panel 3 - Wind
+            panels[2].querySelector('.temp').textContent = weather.wind;
+            panels[2].querySelector('.extra-info').textContent = `Direction: ${weather.windDir}`;
+            
+            // Update Panel 4 - UV
+            panels[3].querySelector('.temp').textContent = weather.uv;
+            let protection = weather.uv > 6 ? 'Sunscreen needed' : (weather.uv > 3 ? 'Moderate' : 'Low');
+            panels[3].querySelector('.extra-info').textContent = `Protection: ${protection}`;
+            
+            // Update Panel 5 - Sunrise/Sunset
+            panels[4].querySelector('.temp').innerHTML = `${weather.sunrise}`;
+            panels[4].querySelector('.description').innerHTML = `${weather.sunset}`;
+        }
+        
+        function showError(message) {
+            document.getElementById('errorMessage').innerHTML = message;
+            document.getElementById('weatherResult').style.display = 'none';
+        }
+        
+        function scrollPanels(direction) {
+            const container = document.getElementById('panelsContainer');
+            const scrollAmount = 400;
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+        
+        // Allow pressing Enter key to search
+        document.getElementById('cityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
+    </script>
+</body>
+</html>
