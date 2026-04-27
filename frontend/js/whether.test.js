@@ -1,3 +1,9 @@
+/*
+Tests for weather_display.js with displayWeather() function
+tests for accurate (true/false : expected) values pulled from API request
+using dummy data to ensure that data is being returned correctly
+*/
+
 const { displayWeather } = require("./weather_display");
 
 // simple assertion helper
