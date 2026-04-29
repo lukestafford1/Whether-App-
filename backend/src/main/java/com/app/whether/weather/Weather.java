@@ -1,4 +1,4 @@
-package com.app.whether;
+package com.app.whether.weather;
 
 import jakarta.persistence.*;
 
