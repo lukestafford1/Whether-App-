@@ -4,11 +4,13 @@ public record WeatherDto(
         String country,
         String state,
         String city,
-        double temperature,
-        String condition,
+        double temp,
+        double feelsLike,
+        String desc,
         int humidity,
-        double windSpeed,
-        int uvIndex,
+        double wind,
+        String windDir,
+        int uv,
         String sunrise,
         String sunset) {
 }
