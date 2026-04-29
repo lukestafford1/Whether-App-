@@ -279,6 +279,21 @@
                 <div class="description">Upcoming weather forecast</div>
                 <div class="extra-info">More details soon</div>
             </div>
+
+            <!-- Panel 5 - Dark -->
+            <div class="panel panel-dark">
+                <h3>🔆 UV Index</h3>
+                <div class="temp">--</div>
+                <div class="description">Sun Intensity</div>
+                <div class="extra-info">Protection: --</div>
+            </div>
+            <!-- Panel 5 - Warm -->
+            <div class="panel panel-warm">
+                <h3>🌅 Sunrise/Sunset</h3>
+                <div class="temp">🌄 --:--</div>
+                <div class="description">🌇 --:--</div>
+                <div class="extra-info">Day length: --h</div>
+            </div>
         </div>
 
         <!-- Scroll Buttons -->
@@ -421,29 +436,29 @@
         
         function updatePanels(weather) {
             const panels = document.querySelectorAll('.panel');
-            
-            // Update Panel 1 - Temperature
+    
+            // Panel 1 - Temperature
             panels[0].querySelector('.temp').textContent = weather.temp;
             panels[0].querySelector('.extra-info').textContent = `Feels like: ${weather.feelsLike}`;
-            
-            // Update Panel 2 - Humidity
+    
+            // Panel 2 - Humidity
             panels[1].querySelector('.temp').textContent = weather.humidity;
             let humidityValue = parseInt(weather.humidity);
             let comfort = humidityValue > 70 ? 'Humid' : (humidityValue < 40 ? 'Dry' : 'Comfortable');
             panels[1].querySelector('.extra-info').textContent = `Comfort: ${comfort}`;
-            
-            // Update Panel 3 - Wind
+    
+            // Panel 3 - Wind
             panels[2].querySelector('.temp').textContent = weather.wind;
             panels[2].querySelector('.extra-info').textContent = `Direction: ${weather.windDir}`;
-            
-            // Update Panel 4 - UV
-            panels[3].querySelector('.temp').textContent = weather.uv;
+    
+            // Panel 4 - UV Index
+            panels[4].querySelector('.temp').textContent = weather.uv;
             let protection = weather.uv > 6 ? 'Sunscreen needed' : (weather.uv > 3 ? 'Moderate' : 'Low');
-            panels[3].querySelector('.extra-info').textContent = `Protection: ${protection}`;
-            
-            // Update Panel 5 - Sunrise/Sunset
-            panels[4].querySelector('.temp').innerHTML = `${weather.sunrise}`;
-            panels[4].querySelector('.description').innerHTML = `${weather.sunset}`;
+            panels[4].querySelector('.extra-info').textContent = `Protection: ${protection}`;
+    
+            // Panel 5 - Sunrise/Sunset
+            panels[5].querySelector('.temp').innerHTML = `🌄 ${weather.sunrise}`;
+            panels[5].querySelector('.description').innerHTML = `🌇 ${weather.sunset}`;
         }
         
         function showError(message) {
