@@ -18,22 +18,8 @@ public class WeatherController {
 
     @GetMapping("/api/weather/current")
     public ResponseEntity<WeatherDto> getCurrentWeather(@RequestParam(value = "city", defaultValue = "Bellevue") String city){
-        // Dummy data for demo v0.5
-        WeatherDto mockWeather = new WeatherDto(
-                "USA",
-                "Washington",
-                city,
-                18.0,      // temp in °C
-                17.5,      // feelsLike in °C
-                "Partly Cloudy",
-                45,        // humidity %
-                12.5,      // wind km/h
-                "NW",
-                3,         // uv
-                "06:15 AM",
-                "20:10 PM"
-        );
 
+        WeatherDto mockWeather = weatherService.getMockWeather(city);
         return ResponseEntity.ok(mockWeather);
     }
 }
