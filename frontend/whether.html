@@ -305,16 +305,16 @@
 
             <!-- Panel 5 - Dark -->
             <div class="panel panel-dark">
-                <h3>🔆 UV Index</h3>
+                <h3>UV Index</h3>
                 <div class="temp">--</div>
                 <div class="description">Sun Intensity</div>
                 <div class="extra-info">Protection: --</div>
             </div>
             <!-- Panel 5 - Warm -->
             <div class="panel panel-warm">
-                <h3>🌅 Sunrise/Sunset</h3>
-                <div class="temp">🌄 --:--</div>
-                <div class="description">🌇 --:--</div>
+                <h3>Sunrise/Sunset</h3>
+                <div class="temp">--:--</div>
+                <div class="description">--:--</div>
                 <div class="extra-info">Day length: --h</div>
             </div>
         </div>
@@ -517,8 +517,8 @@
             panels[4].querySelector('.extra-info').textContent = `Protection: ${protection}`;
     
             // Panel 5 - Sunrise/Sunset
-            panels[5].querySelector('.temp').innerHTML = `🌄 ${weather.sunrise}`;
-            panels[5].querySelector('.description').innerHTML = `🌇 ${weather.sunset}`;
+            panels[5].querySelector('.temp').innerHTML = `${weather.sunrise}`;
+            panels[5].querySelector('.description').innerHTML = `${weather.sunset}`;
         }
         
         function showError(message) {
