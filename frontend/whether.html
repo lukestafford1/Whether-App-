@@ -399,6 +399,7 @@
             }
         };
         
+        /*
         function getWeather() {
             const city = document.getElementById('cityInput').value;
             
@@ -424,7 +425,40 @@
             
             displayWeather(city, weather);
             updatePanels(weather);
+        } 
+        */
+
+        // cd backend
+        // ./mvnw spring-boot:run
+        
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+
+            if (!city) {
+                showError('Please enter a city name!');
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/api/weather/current?city=${encodeURIComponent(city)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("API request failed");
+                }
+
+                const weather = await response.json();
+
+                displayWeather(city, weather);
+                updatePanels(weather);
+
+            } catch (error) {
+                console.error(error);
+                showError("Error loading weather data");
+            }
         }
+        
         
         function displayWeather(city, weather) {
             document.getElementById('cityName').textContent = city.toUpperCase();
