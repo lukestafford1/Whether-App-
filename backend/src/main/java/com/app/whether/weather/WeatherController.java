@@ -17,7 +17,7 @@ public class WeatherController {
     }//constructor injection
 
     @GetMapping("/api/weather/current")
-    public ResponseEntity<WeatherDto> getCurrentWeather(@RequestParam String city) {
+    public ResponseEntity<WeatherDto> getCurrentWeather(@RequestParam(value = "city", defaultValue = "Bellevue") String city){
         // Dummy data for demo v0.5
         WeatherDto mockWeather = new WeatherDto(
                 "USA",
