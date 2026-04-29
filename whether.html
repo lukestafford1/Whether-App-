@@ -59,6 +59,8 @@
             width: 300px;
             margin-right: 10px;
             transition: all 0.3s;
+
+            anchor-name: --input-anchor;
         }
 
         .search-panel input:focus {
@@ -233,6 +235,20 @@
                 margin-bottom: 10px;
             }
         }
+
+        // Search history formatting
+        #history {
+            margin: 0;
+            border: 1px solid #999;
+            background: white;
+
+            position-anchor: --input-anchor;
+            top: anchor(bottom);
+            left: anchor(left);
+
+            width: anchor-size(width);
+
+        }
     </style>
 </head>
 <body>
@@ -244,6 +260,13 @@
         <div class="search-panel">
             <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, Seattle, Dubai)">
             <button onclick="getWeather()">Get Weather</button>
+        </div>
+
+        <!-- Search History Popover -->
+        <div id="history" popover="manual">
+            <ul>
+
+            </ul>
         </div>
 
         <!-- Scrollable Panels Container -->
@@ -406,6 +429,9 @@
                 showError('Please enter a city name!');
                 return;
             }
+
+            // Saving the searched city to the history
+            addHistory();
             
             const cityLower = city.toLowerCase();
             let weather;
@@ -483,6 +509,56 @@
                 getWeather();
             }
         });
+
+        const input = document.getElementById("cityInput");
+        const pop = document.getElementById("history");
+
+        // Handling popover behavior
+        input.addEventListener("focus", () => pop.showPopover());
+        input.addEventListener("blur", () => {
+            setTimeout(() => pop.hidePopover(), 150)
+        });
+
+        // Replacing the click handlers after each new list is made
+        function fixClickHandlers() {
+        document.querySelectorAll("#history li").forEach(li => {
+            li.addEventListener("click", () => {
+                input.value = li.textContent;
+                pop.hidePopover();
+            });
+        });
+        }
+
+        // Creates an array and list for the search history
+        const searchHistory = [];
+        const list = document.querySelector("#history ul");
+
+        // Updates the shown search history
+        function visibleHistoryFix() {
+            list.innerHTML = "";
+
+            searchHistory.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                list.appendChild(li);
+            });
+            fixClickHandlers();
+        }
+
+        // Adds the newest search to the history
+        function addHistory() {
+            // Limiting saved searches to 5
+            if (searchHistory.length > 4) {
+                searchHistory.shift();
+            }
+            searchHistory.push(document.getElementById('cityInput').value);
+            console.log(searchHistory);
+            // Updates the shown history with the addition
+            visibleHistoryFix();
+        }
+
+
+        
     </script>
 </body>
 </html>
