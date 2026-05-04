@@ -579,21 +579,19 @@
             fixClickHandlers();
         }
 
+        /* changed function: if input == duplicate { remove prev and push new } */
         function addHistory() {
             const input = document.getElementById('cityInput').value.trim();
 
             if (!input) return;
 
-            // Remove previous matching entry (if it exists)
             const index = searchHistory.indexOf(input);
             if (index !== -1) {
                 searchHistory.splice(index, 1);
             }
-
-            // Add as newest
+            
             searchHistory.push(input);
-
-            // Keep max 5 items
+            
             if (searchHistory.length > 5) {
                 searchHistory.shift();
             }
