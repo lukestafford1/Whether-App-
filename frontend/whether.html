@@ -453,10 +453,10 @@
             updatePanels(weather);
         } 
         
-        /*
+        
         // cd backend
         // ./mvnw spring-boot:run
-        
+        /*
         async function getWeather() {
             const city = document.getElementById('cityInput').value;
 
@@ -485,7 +485,6 @@
             }
         }
         */
-        
         
         function displayWeather(city, weather) {
             document.getElementById('cityName').textContent = city.toUpperCase();
@@ -580,14 +579,25 @@
             fixClickHandlers();
         }
 
-        // Adds the newest search to the history
         function addHistory() {
-            // Limiting saved searches to 5
-            if (searchHistory.length > 4) {
+            const input = document.getElementById('cityInput').value.trim();
+
+            if (!input) return;
+
+            // Remove previous matching entry (if it exists)
+            const index = searchHistory.indexOf(input);
+            if (index !== -1) {
+                searchHistory.splice(index, 1);
+            }
+
+            // Add as newest
+            searchHistory.push(input);
+
+            // Keep max 5 items
+            if (searchHistory.length > 5) {
                 searchHistory.shift();
             }
-            searchHistory.push(document.getElementById('cityInput').value);
-            // Updates the shown history with the addition
+
             visibleHistoryFix();
         }
 
