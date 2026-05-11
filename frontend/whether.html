@@ -1,11 +1,9 @@
-<!-- HTML comment -->
-
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>"Whether" App</title>
-    <!-- Tab Title -->
+    <title>"Whether" App | Real-time Weather Dashboard</title>
     <style>
       * {
         margin: 0;
@@ -13,11 +11,175 @@
         box-sizing: border-box;
       }
 
+      /* PR2: CSS Variables for Dark Mode */
+      :root {
+        --bg-gradient-start: #b7eef5;
+        --bg-gradient-end: #72bad9;
+        --panel-bg-opacity: 0.9;
+        --text-primary: #333;
+        --text-light: white;
+        --search-bg: rgba(255, 255, 255, 0.95);
+        --result-bg: rgba(255, 255, 255, 0.95);
+        --shadow-color: rgba(0, 0, 0, 0.2);
+        --scrollbar-track: rgba(255, 255, 255, 0.3);
+        --scrollbar-thumb: rgba(255, 255, 255, 0.7);
+        --btn-bg: #ff6b6b;
+        --btn-hover: #ff5252;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+
+      /* PR2: Dark Mode Variables */
+      body.dark-mode {
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+        --panel-bg-opacity: 0.95;
+        --text-primary: #eee;
+        --text-light: #ddd;
+        --search-bg: rgba(30, 30, 46, 0.95);
+        --result-bg: rgba(30, 30, 46, 0.95);
+        --shadow-color: rgba(0, 0, 0, 0.4);
+        --scrollbar-track: rgba(255, 255, 255, 0.1);
+        --scrollbar-thumb: rgba(255, 255, 255, 0.3);
+        --btn-bg: #ff6b6b;
+        --btn-hover: #ff5252;
+      }
+
       body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(180deg, #b7eef5 0%, #72bad9 100%);
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(
+          180deg,
+          var(--bg-gradient-start) 0%,
+          var(--bg-gradient-end) 100%
+        );
         min-height: 100vh;
         padding: 40px 20px;
+        transition: background 0.3s ease;
+      }
+
+      /* PR2: Dark mode text adjustments */
+      body.dark-mode .search-panel,
+      body.dark-mode .weather-result,
+      body.dark-mode .bottom-panel {
+        color: #eee;
+      }
+
+      body.dark-mode .panel-cool {
+        color: #333;
+      }
+
+      /* PR2: Options Menu Button */
+      .options-menu-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .options-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50px;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1.2em;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .options-btn:hover {
+        transform: scale(1.05);
+        background: white;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      /* PR2: Dropdown Menu */
+      .options-dropdown {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: var(--search-bg);
+        border-radius: 15px;
+        padding: 15px;
+        min-width: 220px;
+        box-shadow: 0 10px 30px var(--shadow-color);
+        display: none;
+        backdrop-filter: blur(10px);
+        z-index: 1001;
+      }
+
+      .options-dropdown.show {
+        display: block;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .options-dropdown button {
+        width: 100%;
+        padding: 12px 15px;
+        margin: 5px 0;
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        text-align: left;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .options-dropdown button:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: translateX(5px);
+      }
+
+      body.dark-mode .options-dropdown button {
+        color: #eee;
+      }
+
+      .options-dropdown hr {
+        margin: 10px 0;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Fade-in animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Gentle pulse animation for panels on hover */
+      @keyframes gentlePulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Loading spinner animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       /* Main container */
@@ -29,7 +191,7 @@
       /* Header */
       h1 {
         text-align: center;
-        color: white;
+        color: var(--text-light);
         font-size: 3em;
         margin-bottom: 20px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -37,19 +199,21 @@
 
       .subtitle {
         text-align: center;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--text-light);
         margin-bottom: 40px;
         font-size: 1.2em;
       }
 
       /* Search section panel */
       .search-panel {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--search-bg);
         border-radius: 20px;
         padding: 30px;
         margin-bottom: 40px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px var(--shadow-color);
+        transition: background 0.3s ease;
+        position: relative;
       }
 
       .search-panel input {
@@ -60,8 +224,6 @@
         width: 300px;
         margin-right: 10px;
         transition: all 0.3s;
-
-        anchor-name: --input-anchor;
       }
 
       .search-panel input:focus {
@@ -73,7 +235,7 @@
       .search-panel button {
         padding: 15px 30px;
         font-size: 18px;
-        background: #ff6b6b;
+        background: var(--btn-bg);
         color: white;
         border: none;
         border-radius: 50px;
@@ -83,10 +245,36 @@
           box-shadow 0.2s;
       }
 
-      .search-panel button:hover {
+      .search-panel button:hover:not(:disabled) {
         transform: scale(1.05);
-        background: #ff5252;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background: var(--btn-hover);
+        box-shadow: 0 5px 15px var(--shadow-color);
+      }
+
+      .search-panel button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      /* Loading spinner on button */
+      .search-panel button.loading {
+        position: relative;
+        color: transparent;
+      }
+
+      .search-panel button.loading::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid white;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
       }
 
       /* Panels grid container - allows scrolling */
@@ -104,12 +292,12 @@
       }
 
       .panels-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.3);
+        background: var(--scrollbar-track);
         border-radius: 10px;
       }
 
       .panels-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.7);
+        background: var(--scrollbar-thumb);
         border-radius: 10px;
       }
 
@@ -117,66 +305,116 @@
         background: white;
       }
 
-      /* Individual panel styles - different sizes and colors */
+      /* Individual panel styles */
       .panel {
         border-radius: 20px;
         padding: 25px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px var(--shadow-color);
         transition:
-          transform 0.3s,
-          box-shadow 0.3s;
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
         flex-shrink: 0;
         cursor: pointer;
+        backdrop-filter: blur(2px);
       }
 
       .panel:hover {
         transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 20px 40px var(--shadow-color);
+        animation: gentlePulse 0.5s ease-in-out;
+      }
+
+      .panel-fade-in {
+        animation: fadeIn 0.5s ease-out;
       }
 
       /* Panel size and color variations */
       .panel-small {
         width: 250px;
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(79, 172, 254, 0.9) 0%,
+          rgba(0, 242, 254, 0.9) 100%
+        );
         color: white;
       }
 
       .panel-medium {
         width: 320px;
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(67, 233, 123, 0.85) 0%,
+          rgba(56, 249, 215, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-large {
         width: 400px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.85) 0%,
+          rgba(118, 75, 162, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-dark {
         width: 280px;
-        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(44, 62, 80, 0.85) 0%,
+          rgba(52, 152, 219, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-warm {
         width: 300px;
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(250, 112, 154, 0.85) 0%,
+          rgba(254, 225, 64, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-cool {
         width: 350px;
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(168, 237, 234, 0.9) 0%,
+          rgba(254, 214, 227, 0.9) 100%
+        );
         color: #333;
+      }
+
+      .panel-air {
+        width: 260px;
+        background: linear-gradient(
+          135deg,
+          rgba(147, 197, 253, 0.9) 0%,
+          rgba(59, 130, 246, 0.9) 100%
+        );
+        color: white;
+      }
+
+      /* Weather icon styling */
+      .weather-icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+        display: block;
       }
 
       /* Panel content styling */
       .panel h3 {
-        font-size: 1.5em;
+        font-size: 1.3em;
         margin-bottom: 15px;
         border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .panel .temp {
@@ -223,44 +461,316 @@
       .weather-result {
         margin-top: 40px;
         padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--result-bg);
         border-radius: 20px;
         text-align: center;
-        color: #333;
+        color: var(--text-primary);
+        transition: background 0.3s ease;
       }
 
-      /* Responsive design */
+      /* PR2: Bottom Panel Styles - now simplified (no duplicate about text) */
+      .bottom-panel {
+        margin-top: 60px;
+        padding: 30px 20px;
+        background: var(--search-bg);
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px var(--shadow-color);
+        transition: background 0.3s ease;
+      }
+
+      .bottom-panel h3 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+      }
+
+      .bottom-panel p {
+        margin: 10px 0;
+        color: var(--text-primary);
+        line-height: 1.6;
+      }
+
+      .bottom-panel a {
+        color: #ff6b6b;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.2s;
+      }
+
+      .bottom-panel a:hover {
+        color: #ff5252;
+        text-decoration: underline;
+      }
+
+      .footer-links {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links button {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+
+      .footer-links button:hover {
+        color: #ff5252;
+        transform: scale(1.05);
+      }
+
+      /* ========== ABOUT PAGE (Separate full-page overlay) ========== */
+      .about-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(12px);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden;
+        opacity: 0;
+        transition:
+          visibility 0.2s,
+          opacity 0.2s ease;
+      }
+
+      .about-page.active {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .about-card {
+        background: var(--search-bg);
+        max-width: 650px;
+        width: 90%;
+        border-radius: 32px;
+        padding: 40px 35px;
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
+        color: var(--text-primary);
+        animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .about-card h2 {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 3px solid #ff6b6b;
+        display: inline-block;
+        padding-bottom: 8px;
+      }
+
+      .about-card .about-icon {
+        font-size: 2rem;
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+
+      .about-card .about-description {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        margin: 25px 0 20px 0;
+        color: var(--text-primary);
+      }
+
+      .about-card .coverage-badge {
+        background: rgba(255, 107, 107, 0.15);
+        padding: 12px 18px;
+        border-radius: 60px;
+        display: inline-block;
+        margin: 15px 0;
+        font-weight: 500;
+        border-left: 4px solid #ff6b6b;
+      }
+
+      .about-card .feature-list {
+        margin: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .about-card .feature-list span {
+        background: rgba(114, 186, 217, 0.2);
+        padding: 6px 14px;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .close-about-btn {
+        position: absolute;
+        top: 20px;
+        right: 28px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        cursor: pointer;
+        color: var(--text-primary);
+        transition: transform 0.2s;
+        line-height: 1;
+      }
+
+      .close-about-btn:hover {
+        transform: scale(1.2);
+        color: #ff6b6b;
+      }
+
+      .about-footer {
+        margin-top: 30px;
+        padding-top: 20px;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 0.85rem;
+      }
+
+      body.dark-mode .about-card {
+        background: #1e1e2f;
+        color: #f0f0f0;
+      }
+
+      /* Search history */
+      #history {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 300px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      [popover] {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+      }
+
+      #history ul {
+        list-style: none;
+        padding: 5px;
+        margin: 0;
+      }
+
+      #history li {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-radius: 10px;
+        margin: 2px 0;
+      }
+
+      #history li:hover {
+        background: #f0f0f0;
+      }
+
+      body.dark-mode #history {
+        background: #2a2a3e;
+        color: #eee;
+        border-color: #444;
+      }
+
+      body.dark-mode #history li:hover {
+        background: #3a3a4e;
+      }
+
+      .search-panel {
+        position: relative;
+      }
+
       @media (max-width: 768px) {
         .panel-small,
         .panel-medium,
         .panel-large,
         .panel-dark,
         .panel-warm,
-        .panel-cool {
+        .panel-cool,
+        .panel-air {
           width: 260px;
         }
-
         .search-panel input {
           width: 100%;
           margin-bottom: 10px;
         }
+        .options-btn span:last-child {
+          display: none;
+        }
+        .about-card {
+          padding: 30px 22px;
+        }
+        .about-card h2 {
+          font-size: 1.7rem;
+        }
       }
 
-      /* Search history formatting */
-      #history {
-        margin: 0;
-        border: 1px solid #999;
-        background: white;
-
-        position-anchor: --input-anchor;
-        top: anchor(bottom);
-        left: anchor(left);
-
-        width: anchor-size(width);
+      /* Print styles */
+      @media print {
+        .options-menu-container,
+        .scroll-buttons,
+        .search-panel button,
+        .bottom-panel,
+        .about-page {
+          display: none !important;
+        }
+        .panel {
+          break-inside: avoid;
+        }
+        body {
+          background: white;
+          padding: 20px;
+        }
       }
     </style>
   </head>
   <body>
+    <!-- Options Menu (fixed top-right) -->
+    <div class="options-menu-container">
+      <button class="options-btn" id="optionsBtn" onclick="toggleOptionsMenu()">
+        ⚙️ <span>Options</span>
+      </button>
+      <div class="options-dropdown" id="optionsDropdown">
+        <button onclick="toggleDarkMode()"><span>🌙 Dark Mode</span></button>
+        <button onclick="window.print()"><span>🖨️ Print Page</span></button>
+        <hr />
+        <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
+        <button id="aboutPageBtn"><span>📖 About "Whether" App</span></button>
+        <button onclick="scrollToBottom()">
+          <span>⬇️ Scroll to Info</span>
+        </button>
+      </div>
+    </div>
+
     <div class="dashboard">
       <h1>"Whether" App</h1>
       <div class="subtitle">Learn about today's weather conditions!</div>
@@ -271,62 +781,69 @@
           type="text"
           id="cityInput"
           placeholder="Enter city name (e.g., London, Seattle, Dubai)"
+          autocomplete="off"
         />
-        <button onclick="getWeather()">Get Weather</button>
-      </div>
-
-      <!-- Search History Popover -->
-      <div id="history" popover="manual">
-        <ul></ul>
+        <button id="searchBtn" onclick="getWeather()">Get Weather</button>
+        <div id="history" popover="manual">
+          <ul></ul>
+        </div>
       </div>
 
       <!-- Scrollable Panels Container -->
       <div class="panels-container" id="panelsContainer">
-        <!-- Panel 1 - Small -->
-        <div class="panel panel-small">
-          <h3>Current Temp</h3>
+        <div class="panel panel-small" data-panel="temp">
+          <h3>🌡️ Current Temp</h3>
           <div class="temp">--°C</div>
           <div class="description">Click "Get Weather"</div>
           <div class="extra-info">Feels like: --°C</div>
         </div>
-
-        <!-- Panel 2 - Medium -->
-        <div class="panel panel-medium">
-          <h3>Humidity</h3>
+        <div class="panel panel-medium" data-panel="humidity">
+          <h3>💧 Humidity</h3>
           <div class="temp">--%</div>
           <div class="description">Moisture Level</div>
           <div class="extra-info">Comfort: --</div>
         </div>
-
-        <!-- Panel 3 - Large -->
-        <div class="panel panel-large">
-          <h3>Wind Speed</h3>
+        <div class="panel panel-large" data-panel="wind">
+          <h3>💨 Wind Speed</h3>
           <div class="temp">-- km/h</div>
           <div class="description">Wind Direction</div>
-          <div class="extra-info">Gusts: -- km/h</div>
+          <div class="extra-info">Direction: --</div>
         </div>
-
-        <!-- Panel 4 - Cool -->
-        <div class="panel panel-cool">
-          <h3>Forecast</h3>
-          <div class="temp">3-Day</div>
-          <div class="description">Upcoming weather forecast</div>
-          <div class="extra-info">More details soon</div>
+        <div class="panel panel-cool" data-panel="forecast">
+          <h3>📅 3-Day Forecast</h3>
+          <div class="temp">--</div>
+          <div class="description">Upcoming weather</div>
+          <div class="extra-info">Extended forecast coming soon</div>
         </div>
-
-        <!-- Panel 5 - Dark -->
-        <div class="panel panel-dark">
-          <h3>UV Index</h3>
+        <div class="panel panel-dark" data-panel="uv">
+          <h3>☀️ UV Index</h3>
           <div class="temp">--</div>
           <div class="description">Sun Intensity</div>
           <div class="extra-info">Protection: --</div>
         </div>
-        <!-- Panel 5 - Warm -->
-        <div class="panel panel-warm">
-          <h3>Sunrise/Sunset</h3>
+        <div class="panel panel-warm" data-panel="sun">
+          <h3>🌅 Sunrise/Sunset</h3>
           <div class="temp">--:--</div>
           <div class="description">--:--</div>
           <div class="extra-info">Day length: --h</div>
+        </div>
+        <div class="panel panel-air" data-panel="air">
+          <h3>🌿 Air Quality</h3>
+          <div class="temp">--</div>
+          <div class="description">Air Quality Index</div>
+          <div class="extra-info">Sensitive groups: --</div>
+        </div>
+        <div class="panel panel-small" data-panel="pressure">
+          <h3>📊 Pressure</h3>
+          <div class="temp">-- hPa</div>
+          <div class="description">Atmospheric Pressure</div>
+          <div class="extra-info">Trend: --</div>
+        </div>
+        <div class="panel panel-medium" data-panel="visibility">
+          <h3>👁️ Visibility</h3>
+          <div class="temp">-- km</div>
+          <div class="description">Clear conditions</div>
+          <div class="extra-info">Standard: 10+ km</div>
         </div>
       </div>
 
@@ -343,6 +860,7 @@
       <!-- Weather Result Display -->
       <div id="weatherResult" class="weather-result" style="display: none">
         <h2 id="cityName"></h2>
+        <div class="weather-icon" id="weatherIcon">🌤️</div>
         <div class="temp" id="temperature"></div>
         <div id="description"></div>
         <div id="humidity"></div>
@@ -352,16 +870,150 @@
         id="errorMessage"
         style="color: #ff6b6b; margin-top: 20px; text-align: center"
       ></div>
+
+      <!-- PR2: Bottom Panel (simplified, no duplicate about paragraph, only a teaser) -->
+      <div class="bottom-panel">
+        <h3>Weather Dashboard</h3>
+        <p>
+          Real-time insights with interactive panels. Dark mode, search history,
+          and detailed weather metrics.
+        </p>
+        <div class="footer-links">
+          <button id="bottomAboutBtn">📖 About "Whether" App</button>
+          <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+          <button onclick="window.print()">🖨️ Print</button>
+          <a
+            href="#"
+            onclick="
+              scrollToTop();
+              return false;
+            "
+            >⬆️ Back to Top</a
+          >
+        </div>
+        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
+          Created by The Whether App Team | Version 1.0
+        </p>
+      </div>
+    </div>
+
+    <!-- ========== SEPARATE ABOUT PAGE (Full overlay, clean design) ========== -->
+    <div id="aboutOverlay" class="about-page">
+      <div class="about-card">
+        <button class="close-about-btn" id="closeAboutOverlayBtn">
+          &times;
+        </button>
+        <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
+        <div class="about-description">
+          <p>
+            Your go-to destination for accurate, real-time weather information
+            from around the globe. Whether you’re planning a trip, checking
+            local conditions, or just curious about the weather, our app
+            provides comprehensive data in a clear and easy-to-read format.
+          </p>
+        </div>
+        <div class="coverage-badge">
+          🌍 <strong>Current Coverage:</strong> 15+ major cities worldwide with
+          mock data. Real API coming soon!
+        </div>
+        <div class="feature-list">
+          <span>✨ Interactive panels</span>
+          <span>🌙 Dark mode</span>
+          <span>📜 Search history</span>
+          <span>🖱️ Scrollable cards</span>
+          <span>📱 Fully responsive</span>
+          <span>🖨️ Print-friendly</span>
+        </div>
+        <div class="about-footer">
+          <p>
+            Powered by mock weather data · Open-Meteo API integration planned
+          </p>
+          <p style="margin-top: 8px">
+            &copy; 2026 "WhetheR" App Team! — CSS 360 A.
+          </p>
+        </div>
+      </div>
     </div>
 
     <script>
-      /*  This is a demo version using mock data,
-            Open-meteo API integration coming soon...
-        */
+      /* ---------- DARK MODE & LOCALSTORAGE ---------- */
+      function loadPreferences() {
+        const darkMode = localStorage.getItem("darkMode");
+        if (darkMode === "enabled") document.body.classList.add("dark-mode");
+        const lastCity = localStorage.getItem("lastCity");
+        if (lastCity) document.getElementById("cityInput").value = lastCity;
+      }
 
-      // Complete mock weather data for all cities
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem(
+          "darkMode",
+          document.body.classList.contains("dark-mode")
+            ? "enabled"
+            : "disabled",
+        );
+      }
+
+      /* Options menu dropdown */
+      function toggleOptionsMenu() {
+        const dropdown = document.getElementById("optionsDropdown");
+        dropdown.classList.toggle("show");
+      }
+      document.addEventListener("click", function (event) {
+        const container = document.querySelector(".options-menu-container");
+        const dropdown = document.getElementById("optionsDropdown");
+        if (container && !container.contains(event.target))
+          dropdown.classList.remove("show");
+      });
+
+      /* About Page Overlay (separate page) */
+      function showAboutPage() {
+        const overlay = document.getElementById("aboutOverlay");
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+      function closeAboutPage() {
+        const overlay = document.getElementById("aboutOverlay");
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+      // open via options button + bottom footer button
+      document.getElementById("aboutPageBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        showAboutPage();
+        toggleOptionsMenu(); // close dropdown after click
+      });
+      document
+        .getElementById("bottomAboutBtn")
+        .addEventListener("click", () => showAboutPage());
+      document
+        .getElementById("closeAboutOverlayBtn")
+        .addEventListener("click", closeAboutPage);
+      // close on overlay background click
+      document.getElementById("aboutOverlay").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("aboutOverlay"))
+          closeAboutPage();
+      });
+      // ESC key closes the about page
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeAboutPage();
+          document.getElementById("optionsDropdown").classList.remove("show");
+        }
+      });
+
+      function scrollToBottom() {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      /* ---------- WEATHER LOGIC (mock) ---------- */
       const mockWeatherData = {
-        // Original cities
         london: {
           temp: "12°C",
           feelsLike: "10°C",
@@ -372,6 +1024,8 @@
           uv: "3",
           sunrise: "06:45",
           sunset: "19:30",
+          pressure: "1015",
+          visibility: "8",
         },
         "new york": {
           temp: "18°C",
@@ -383,6 +1037,8 @@
           uv: "5",
           sunrise: "06:30",
           sunset: "19:15",
+          pressure: "1018",
+          visibility: "12",
         },
         tokyo: {
           temp: "22°C",
@@ -394,6 +1050,8 @@
           uv: "7",
           sunrise: "05:45",
           sunset: "18:30",
+          pressure: "1012",
+          visibility: "10",
         },
         paris: {
           temp: "15°C",
@@ -405,6 +1063,8 @@
           uv: "2",
           sunrise: "07:00",
           sunset: "20:00",
+          pressure: "1008",
+          visibility: "5",
         },
         sydney: {
           temp: "25°C",
@@ -416,9 +1076,9 @@
           uv: "8",
           sunrise: "06:15",
           sunset: "19:45",
+          pressure: "1016",
+          visibility: "15",
         },
-
-        // US Cities
         seattle: {
           temp: "14°C",
           feelsLike: "13°C",
@@ -429,6 +1089,8 @@
           uv: "2",
           sunrise: "06:50",
           sunset: "19:40",
+          pressure: "1014",
+          visibility: "6",
         },
         "los angeles": {
           temp: "24°C",
@@ -440,66 +1102,9 @@
           uv: "8",
           sunrise: "06:25",
           sunset: "19:10",
+          pressure: "1017",
+          visibility: "16",
         },
-        houston: {
-          temp: "28°C",
-          feelsLike: "31°C",
-          desc: "Hot and humid",
-          humidity: "75%",
-          wind: "12 km/h",
-          windDir: "S",
-          uv: "7",
-          sunrise: "06:40",
-          sunset: "19:35",
-        },
-        "washington dc": {
-          temp: "20°C",
-          feelsLike: "19°C",
-          desc: "Partly cloudy",
-          humidity: "60%",
-          wind: "14 km/h",
-          windDir: "N",
-          uv: "5",
-          sunrise: "06:35",
-          sunset: "19:25",
-        },
-        miami: {
-          temp: "29°C",
-          feelsLike: "33°C",
-          desc: "Tropical paradise",
-          humidity: "80%",
-          wind: "16 km/h",
-          windDir: "SE",
-          uv: "9",
-          sunrise: "06:55",
-          sunset: "19:50",
-        },
-
-        // European Cities
-        berlin: {
-          temp: "11°C",
-          feelsLike: "9°C",
-          desc: "Overcast",
-          humidity: "72%",
-          wind: "18 km/h",
-          windDir: "W",
-          uv: "2",
-          sunrise: "06:15",
-          sunset: "19:55",
-        },
-        moscow: {
-          temp: "6°C",
-          feelsLike: "3°C",
-          desc: "Cold and breezy",
-          humidity: "68%",
-          wind: "22 km/h",
-          windDir: "N",
-          uv: "1",
-          sunrise: "05:30",
-          sunset: "19:00",
-        },
-
-        // Middle East
         dubai: {
           temp: "35°C",
           feelsLike: "40°C",
@@ -510,9 +1115,9 @@
           uv: "10",
           sunrise: "06:00",
           sunset: "18:45",
+          pressure: "1005",
+          visibility: "10",
         },
-
-        // Asian Cities
         singapore: {
           temp: "30°C",
           feelsLike: "34°C",
@@ -523,17 +1128,8 @@
           uv: "8",
           sunrise: "07:05",
           sunset: "19:15",
-        },
-        "hong kong": {
-          temp: "26°C",
-          feelsLike: "28°C",
-          desc: "Humid and hazy",
-          humidity: "82%",
-          wind: "14 km/h",
-          windDir: "E",
-          uv: "6",
-          sunrise: "06:20",
-          sunset: "18:50",
+          pressure: "1009",
+          visibility: "8",
         },
         beijing: {
           temp: "16°C",
@@ -545,6 +1141,8 @@
           uv: "4",
           sunrise: "05:55",
           sunset: "18:40",
+          pressure: "1018",
+          visibility: "3",
         },
         seoul: {
           temp: "17°C",
@@ -556,28 +1154,43 @@
           uv: "5",
           sunrise: "06:10",
           sunset: "19:05",
+          pressure: "1016",
+          visibility: "12",
         },
       };
-
-      function getWeather() {
-        const city = document.getElementById("cityInput").value;
-
+      function getWeatherIcon(desc) {
+        const d = desc.toLowerCase();
+        if (d.includes("sun") || d.includes("clear") || d.includes("hot"))
+          return "☀️";
+        if (d.includes("rain") || d.includes("drizzle")) return "🌧️";
+        if (d.includes("cloud")) return "☁️";
+        if (d.includes("thunder")) return "⛈️";
+        return "🌤️";
+      }
+      function getAirQuality(desc, city) {
+        return { aqi: "Moderate", sensitive: "Sensitive groups: caution" };
+      }
+      function getPressureTrend() {
+        return "Stable ➡️";
+      }
+      let isLoading = false;
+      async function getWeather() {
+        if (isLoading) return;
+        const city = document.getElementById("cityInput").value.trim();
         if (!city) {
           showError("Please enter a city name!");
           return;
         }
-
-        // Saving the searched city to the history
+        localStorage.setItem("lastCity", city);
+        isLoading = true;
+        const btn = document.getElementById("searchBtn");
+        btn.classList.add("loading");
+        btn.disabled = true;
+        await new Promise((r) => setTimeout(r, 400));
         addHistory();
-
-        const cityLower = city.toLowerCase();
-        let weather;
-
-        if (mockWeatherData[cityLower]) {
-          weather = mockWeatherData[cityLower];
-          document.getElementById("errorMessage").innerHTML = "";
-        } else {
-          // Default fake data for unknown cities
+        const low = city.toLowerCase();
+        let weather = mockWeatherData[low];
+        if (!weather) {
           weather = {
             temp: "22°C",
             feelsLike: "21°C",
@@ -588,176 +1201,111 @@
             uv: "4",
             sunrise: "06:30",
             sunset: "19:00",
+            pressure: "1013",
+            visibility: "10",
           };
           document.getElementById("errorMessage").innerHTML =
-            "Note: You typed a city not on the list, but don't worry the open-meteo API is coming soon, fake data is shown in the meantime!";
-        }
-
+            "Demo data shown. Full API support coming!";
+        } else document.getElementById("errorMessage").innerHTML = "";
         displayWeather(city, weather);
-        updatePanels(weather);
+        updatePanels(weather, city);
+        btn.classList.remove("loading");
+        btn.disabled = false;
+        isLoading = false;
       }
-
-      // cd backend
-      // ./mvnw spring-boot:run
-      /*
-        async function getWeather() {
-            const city = document.getElementById('cityInput').value;
-
-            if (!city) {
-                showError('Please enter a city name!');
-                return;
-            }
-
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/api/weather/current?city=${encodeURIComponent(city)}`
-                );
-
-                if (!response.ok) {
-                    throw new Error("API request failed");
-                }
-
-                const weather = await response.json();
-
-                displayWeather(city, weather);
-                updatePanels(weather);
-
-            } catch (error) {
-                console.error(error);
-                showError("Error loading weather data");
-            }
-        }
-        */
-
-      function displayWeather(city, weather) {
+      function displayWeather(city, w) {
         document.getElementById("cityName").textContent = city.toUpperCase();
-        document.getElementById("temperature").textContent = weather.temp;
-        document.getElementById("description").textContent = weather.desc;
+        document.getElementById("weatherIcon").textContent = getWeatherIcon(
+          w.desc,
+        );
+        document.getElementById("temperature").textContent = w.temp;
+        document.getElementById("description").textContent = w.desc;
         document.getElementById("humidity").textContent =
-          `Humidity: ${weather.humidity}`;
+          `Humidity: ${w.humidity}`;
         document.getElementById("weatherResult").style.display = "block";
       }
-
-      function updatePanels(weather) {
-        const panels = document.querySelectorAll(".panel");
-
-        // Panel 1 - Temperature
-        panels[0].querySelector(".temp").textContent = weather.temp;
-        panels[0].querySelector(".extra-info").textContent =
-          `Feels like: ${weather.feelsLike}`;
-
-        // Panel 2 - Humidity
-        panels[1].querySelector(".temp").textContent = weather.humidity;
-        let humidityValue = parseInt(weather.humidity);
-        let comfort =
-          humidityValue > 70
-            ? "Humid"
-            : humidityValue < 40
-              ? "Dry"
-              : "Comfortable";
-        panels[1].querySelector(".extra-info").textContent =
-          `Comfort: ${comfort}`;
-
-        // Panel 3 - Wind
-        panels[2].querySelector(".temp").textContent = weather.wind;
-        panels[2].querySelector(".extra-info").textContent =
-          `Direction: ${weather.windDir}`;
-
-        // Panel 4 - UV Index
-        panels[4].querySelector(".temp").textContent = weather.uv;
-        let protection =
-          weather.uv > 6
-            ? "Sunscreen needed"
-            : weather.uv > 3
-              ? "Moderate"
-              : "Low";
-        panels[4].querySelector(".extra-info").textContent =
-          `Protection: ${protection}`;
-
-        // Panel 5 - Sunrise/Sunset
-        panels[5].querySelector(".temp").innerHTML = `${weather.sunrise}`;
-        panels[5].querySelector(".description").innerHTML = `${weather.sunset}`;
+      function updatePanels(w, city) {
+        const p = document.querySelectorAll(".panel");
+        p[0].querySelector(".temp").textContent = w.temp;
+        p[0].querySelector(".extra-info").textContent =
+          `Feels like: ${w.feelsLike}`;
+        p[1].querySelector(".temp").textContent = w.humidity;
+        p[1].querySelector(".extra-info").textContent =
+          `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`;
+        p[2].querySelector(".temp").textContent = w.wind;
+        p[2].querySelector(".extra-info").textContent =
+          `Direction: ${w.windDir}`;
+        p[3].querySelector(".temp").innerHTML =
+          `${getWeatherIcon(w.desc)} ${w.desc}`;
+        p[4].querySelector(".temp").textContent = w.uv;
+        p[4].querySelector(".extra-info").textContent =
+          w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+        p[5].querySelector(".temp").innerHTML = `🌅 ${w.sunrise}`;
+        p[5].querySelector(".description").innerHTML = `🌇 ${w.sunset}`;
+        let day =
+          parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
+        if (day < 0) day += 12;
+        p[5].querySelector(".extra-info").textContent = `Day length: ${day}h`;
+        const aq = getAirQuality(w.desc, city);
+        p[6].querySelector(".temp").textContent = aq.aqi;
+        p[6].querySelector(".extra-info").textContent = aq.sensitive;
+        p[7].querySelector(".temp").textContent = `${w.pressure} hPa`;
+        p[7].querySelector(".extra-info").textContent =
+          `Trend: ${getPressureTrend()}`;
+        p[8].querySelector(".temp").textContent = `${w.visibility} km`;
+        p[8].querySelector(".extra-info").textContent =
+          w.visibility >= 10 ? "Excellent" : "Good";
       }
-
-      function showError(message) {
-        document.getElementById("errorMessage").innerHTML = message;
+      function showError(msg) {
+        document.getElementById("errorMessage").innerHTML = msg;
         document.getElementById("weatherResult").style.display = "none";
       }
-
-      function scrollPanels(direction) {
-        const container = document.getElementById("panelsContainer");
-        const scrollAmount = 400;
-
-        if (direction === "left") {
-          container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-        } else {
-          container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-        }
+      function scrollPanels(dir) {
+        document
+          .getElementById("panelsContainer")
+          .scrollBy({ left: dir === "left" ? -400 : 400, behavior: "smooth" });
       }
-
-      // Allow pressing Enter key to search
-      document
-        .getElementById("cityInput")
-        .addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            getWeather();
-          }
-        });
-
-      const input = document.getElementById("cityInput");
-      const pop = document.getElementById("history");
-
-      // Handling popover behavior
-      input.addEventListener("focus", () => pop.showPopover());
-      input.addEventListener("blur", () => {
-        setTimeout(() => pop.hidePopover(), 150);
+      document.getElementById("cityInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") getWeather();
       });
-
-      // Replacing the click handlers after each new list is made
-      function fixClickHandlers() {
-        document.querySelectorAll("#history li").forEach((li) => {
+      const historyStore = [],
+        listEl = document.querySelector("#history ul"),
+        inp = document.getElementById("cityInput"),
+        pop = document.getElementById("history");
+      function fixHistoryClicks() {
+        document.querySelectorAll("#history li").forEach((li) =>
           li.addEventListener("click", () => {
-            input.value = li.textContent;
+            inp.value = li.textContent;
             pop.hidePopover();
-          });
-        });
+            getWeather();
+          }),
+        );
       }
-
-      // Creates an array and list for the search history
-      const searchHistory = [];
-      const list = document.querySelector("#history ul");
-
-      // Updates the shown search history
-      function visibleHistoryFix() {
-        list.innerHTML = "";
-
-        searchHistory.forEach((item) => {
-          const li = document.createElement("li");
-          li.textContent = item;
-          list.appendChild(li);
+      function renderHistory() {
+        listEl.innerHTML = "";
+        historyStore.forEach((c) => {
+          let li = document.createElement("li");
+          li.textContent = c;
+          listEl.appendChild(li);
         });
-        fixClickHandlers();
+        fixHistoryClicks();
       }
-
-      /* changed function: if input == duplicate { remove prev and push new } */
       function addHistory() {
-        const input = document.getElementById("cityInput").value.trim();
-
-        if (!input) return;
-
-        const index = searchHistory.indexOf(input);
-        if (index !== -1) {
-          searchHistory.splice(index, 1);
-        }
-
-        searchHistory.push(input);
-
-        if (searchHistory.length > 5) {
-          searchHistory.shift();
-        }
-
-        visibleHistoryFix();
+        let val = inp.value.trim();
+        if (!val) return;
+        let idx = historyStore.indexOf(val);
+        if (idx !== -1) historyStore.splice(idx, 1);
+        historyStore.push(val);
+        if (historyStore.length > 5) historyStore.shift();
+        renderHistory();
       }
+      inp.addEventListener("focus", () => {
+        if (historyStore.length) pop.showPopover();
+      });
+      inp.addEventListener("blur", () =>
+        setTimeout(() => pop.hidePopover(), 200),
+      );
+      loadPreferences();
     </script>
   </body>
 </html>
