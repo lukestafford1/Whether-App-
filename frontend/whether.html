@@ -20,6 +20,41 @@
         padding: 40px 20px;
       }
 
+      /* PR1: Fade-in animation for weather updates */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* PR1: Gentle pulse animation for panels on hover */
+      @keyframes gentlePulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* PR1: Loading spinner animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
       /* Main container */
       .dashboard {
         max-width: 1400px;
@@ -83,10 +118,36 @@
           box-shadow 0.2s;
       }
 
-      .search-panel button:hover {
+      .search-panel button:hover:not(:disabled) {
         transform: scale(1.05);
         background: #ff5252;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .search-panel button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      /* PR1: Loading spinner on button */
+      .search-panel button.loading {
+        position: relative;
+        color: transparent;
+      }
+
+      .search-panel button.loading::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid white;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
       }
 
       /* Panels grid container - allows scrolling */
@@ -123,60 +184,114 @@
         padding: 25px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         transition:
-          transform 0.3s,
-          box-shadow 0.3s;
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
         flex-shrink: 0;
         cursor: pointer;
+        backdrop-filter: blur(2px);
       }
 
+      /* PR1: Hover animation with gentle pulse */
       .panel:hover {
         transform: translateY(-10px);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        animation: gentlePulse 0.5s ease-in-out;
       }
 
-      /* Panel size and color variations */
+      /* PR1: Fade-in class for panels when updating */
+      .panel-fade-in {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      /* Panel size and color variations - PR1: Updated to match sky background */
       .panel-small {
         width: 250px;
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(79, 172, 254, 0.9) 0%,
+          rgba(0, 242, 254, 0.9) 100%
+        );
         color: white;
+        backdrop-filter: blur(5px);
       }
 
       .panel-medium {
         width: 320px;
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(67, 233, 123, 0.85) 0%,
+          rgba(56, 249, 215, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-large {
         width: 400px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.85) 0%,
+          rgba(118, 75, 162, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-dark {
         width: 280px;
-        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(44, 62, 80, 0.85) 0%,
+          rgba(52, 152, 219, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-warm {
         width: 300px;
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(250, 112, 154, 0.85) 0%,
+          rgba(254, 225, 64, 0.85) 100%
+        );
         color: white;
       }
 
       .panel-cool {
         width: 350px;
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(168, 237, 234, 0.9) 0%,
+          rgba(254, 214, 227, 0.9) 100%
+        );
         color: #333;
+      }
+
+      /* PR1: New panel style for Air Quality and Pressure */
+      .panel-air {
+        width: 260px;
+        background: linear-gradient(
+          135deg,
+          rgba(147, 197, 253, 0.9) 0%,
+          rgba(59, 130, 246, 0.9) 100%
+        );
+        color: white;
+      }
+
+      /* PR1: Weather icon styling */
+      .weather-icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+        display: block;
       }
 
       /* Panel content styling */
       .panel h3 {
-        font-size: 1.5em;
+        font-size: 1.3em;
         margin-bottom: 15px;
         border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .panel .temp {
@@ -229,6 +344,25 @@
         color: #333;
       }
 
+      /* PR1: Loading spinner for panels */
+      .panel-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 10px;
+      }
+
       /* Responsive design */
       @media (max-width: 768px) {
         .panel-small,
@@ -236,7 +370,8 @@
         .panel-large,
         .panel-dark,
         .panel-warm,
-        .panel-cool {
+        .panel-cool,
+        .panel-air {
           width: 260px;
         }
 
@@ -258,11 +393,26 @@
 
         width: anchor-size(width);
       }
+
+      #history ul {
+        list-style: none;
+        padding: 5px;
+      }
+
+      #history li {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      #history li:hover {
+        background: #f0f0f0;
+      }
     </style>
   </head>
   <body>
     <div class="dashboard">
-      <h1>"Whether" App</h1>
+      <h1>🌤️ "Whether" App</h1>
       <div class="subtitle">Learn about today's weather conditions!</div>
 
       <!-- Search Panel -->
@@ -272,7 +422,7 @@
           id="cityInput"
           placeholder="Enter city name (e.g., London, Seattle, Dubai)"
         />
-        <button onclick="getWeather()">Get Weather</button>
+        <button id="searchBtn" onclick="getWeather()">Get Weather</button>
       </div>
 
       <!-- Search History Popover -->
@@ -282,51 +432,76 @@
 
       <!-- Scrollable Panels Container -->
       <div class="panels-container" id="panelsContainer">
-        <!-- Panel 1 - Small -->
-        <div class="panel panel-small">
-          <h3>Current Temp</h3>
+        <!-- PR1: Panel 1 - Temperature with icon -->
+        <div class="panel panel-small" data-panel="temp">
+          <h3>🌡️ Current Temp</h3>
           <div class="temp">--°C</div>
           <div class="description">Click "Get Weather"</div>
           <div class="extra-info">Feels like: --°C</div>
         </div>
 
-        <!-- Panel 2 - Medium -->
-        <div class="panel panel-medium">
-          <h3>Humidity</h3>
+        <!-- PR1: Panel 2 - Humidity with icon -->
+        <div class="panel panel-medium" data-panel="humidity">
+          <h3>💧 Humidity</h3>
           <div class="temp">--%</div>
           <div class="description">Moisture Level</div>
           <div class="extra-info">Comfort: --</div>
         </div>
 
-        <!-- Panel 3 - Large -->
-        <div class="panel panel-large">
-          <h3>Wind Speed</h3>
+        <!-- PR1: Panel 3 - Wind with icon -->
+        <div class="panel panel-large" data-panel="wind">
+          <h3>💨 Wind Speed</h3>
           <div class="temp">-- km/h</div>
           <div class="description">Wind Direction</div>
-          <div class="extra-info">Gusts: -- km/h</div>
+          <div class="extra-info">Direction: --</div>
         </div>
 
-        <!-- Panel 4 - Cool -->
-        <div class="panel panel-cool">
-          <h3>Forecast</h3>
-          <div class="temp">3-Day</div>
-          <div class="description">Upcoming weather forecast</div>
-          <div class="extra-info">More details soon</div>
+        <!-- PR1: Panel 4 - Forecast (updated with better info) -->
+        <div class="panel panel-cool" data-panel="forecast">
+          <h3>📅 3-Day Forecast</h3>
+          <div class="temp">--</div>
+          <div class="description">Upcoming weather</div>
+          <div class="extra-info">Extended forecast coming soon</div>
         </div>
 
-        <!-- Panel 5 - Dark -->
-        <div class="panel panel-dark">
-          <h3>UV Index</h3>
+        <!-- PR1: Panel 5 - UV Index with icon -->
+        <div class="panel panel-dark" data-panel="uv">
+          <h3>☀️ UV Index</h3>
           <div class="temp">--</div>
           <div class="description">Sun Intensity</div>
           <div class="extra-info">Protection: --</div>
         </div>
-        <!-- Panel 5 - Warm -->
-        <div class="panel panel-warm">
-          <h3>Sunrise/Sunset</h3>
+
+        <!-- PR1: Panel 6 - Sunrise/Sunset with icon -->
+        <div class="panel panel-warm" data-panel="sun">
+          <h3>🌅 Sunrise/Sunset</h3>
           <div class="temp">--:--</div>
           <div class="description">--:--</div>
           <div class="extra-info">Day length: --h</div>
+        </div>
+
+        <!-- PR1: NEW Panel 7 - Air Quality Index -->
+        <div class="panel panel-air" data-panel="air">
+          <h3>🌿 Air Quality</h3>
+          <div class="temp">--</div>
+          <div class="description">Air Quality Index</div>
+          <div class="extra-info">Sensitive groups: --</div>
+        </div>
+
+        <!-- PR1: NEW Panel 8 - Pressure -->
+        <div class="panel panel-small" data-panel="pressure">
+          <h3>📊 Pressure</h3>
+          <div class="temp">-- hPa</div>
+          <div class="description">Atmospheric Pressure</div>
+          <div class="extra-info">Trend: --</div>
+        </div>
+
+        <!-- PR1: NEW Panel 9 - Visibility -->
+        <div class="panel panel-medium" data-panel="visibility">
+          <h3>👁️ Visibility</h3>
+          <div class="temp">-- km</div>
+          <div class="description">Clear conditions</div>
+          <div class="extra-info">Standard: 10+ km</div>
         </div>
       </div>
 
@@ -343,6 +518,7 @@
       <!-- Weather Result Display -->
       <div id="weatherResult" class="weather-result" style="display: none">
         <h2 id="cityName"></h2>
+        <div class="weather-icon" id="weatherIcon">🌤️</div>
         <div class="temp" id="temperature"></div>
         <div id="description"></div>
         <div id="humidity"></div>
@@ -357,7 +533,73 @@
     <script>
       /*  This is a demo version using mock data,
             Open-meteo API integration coming soon...
+            PR1: Enhanced with animations, new panels, and weather icons
         */
+
+      // PR1: Weather icon mapping based on description
+      function getWeatherIcon(description) {
+        const desc = description.toLowerCase();
+        if (
+          desc.includes("sun") ||
+          desc.includes("clear") ||
+          desc.includes("hot")
+        )
+          return "☀️";
+        if (desc.includes("rain") || desc.includes("drizzle")) return "🌧️";
+        if (desc.includes("cloud") || desc.includes("overcast")) return "☁️";
+        if (desc.includes("thunder")) return "⛈️";
+        if (desc.includes("snow")) return "❄️";
+        if (desc.includes("fog") || desc.includes("mist")) return "🌫️";
+        if (desc.includes("wind")) return "💨";
+        if (desc.includes("humid")) return "💧";
+        return "🌤️";
+      }
+
+      // PR1: Get air quality based on description/mock
+      function getAirQuality(description, city) {
+        const mockAirQuality = {
+          london: { aqi: "Moderate", sensitive: "Unusually sensitive" },
+          "new york": { aqi: "Good", sensitive: "Good for all" },
+          tokyo: { aqi: "Good", sensitive: "Good for all" },
+          paris: { aqi: "Moderate", sensitive: "Unusually sensitive" },
+          delhi: { aqi: "Poor", sensitive: "Reduce outdoor activity" },
+          beijing: { aqi: "Poor", sensitive: "Wear mask recommended" },
+        };
+
+        const cityLower = city?.toLowerCase() || "";
+        if (mockAirQuality[cityLower]) {
+          return mockAirQuality[cityLower];
+        }
+
+        // Default based on description
+        if (description.toLowerCase().includes("smog")) {
+          return { aqi: "Poor", sensitive: "Avoid outdoor activity" };
+        }
+        return { aqi: "Good", sensitive: "Good for all" };
+      }
+
+      // PR1: Get pressure trend
+      function getPressureTrend() {
+        const trends = ["Rising", "Falling", "Stable"];
+        return trends[Math.floor(Math.random() * 3)];
+      }
+
+      // PR1: Loading state management
+      let isLoading = false;
+
+      function setLoading(loading) {
+        isLoading = loading;
+        const btn = document.getElementById("searchBtn");
+        if (loading) {
+          btn.classList.add("loading");
+          btn.disabled = true;
+          btn.textContent = "Loading...";
+        } else {
+          btn.classList.remove("loading");
+          btn.disabled = false;
+          btn.textContent = "Get Weather";
+        }
+      }
 
       // Complete mock weather data for all cities
       const mockWeatherData = {
@@ -372,6 +614,8 @@
           uv: "3",
           sunrise: "06:45",
           sunset: "19:30",
+          pressure: "1015",
+          visibility: "8",
         },
         "new york": {
           temp: "18°C",
@@ -383,6 +627,8 @@
           uv: "5",
           sunrise: "06:30",
           sunset: "19:15",
+          pressure: "1018",
+          visibility: "12",
         },
         tokyo: {
           temp: "22°C",
@@ -394,6 +640,8 @@
           uv: "7",
           sunrise: "05:45",
           sunset: "18:30",
+          pressure: "1012",
+          visibility: "10",
         },
         paris: {
           temp: "15°C",
@@ -405,6 +653,8 @@
           uv: "2",
           sunrise: "07:00",
           sunset: "20:00",
+          pressure: "1008",
+          visibility: "5",
         },
         sydney: {
           temp: "25°C",
@@ -416,6 +666,8 @@
           uv: "8",
           sunrise: "06:15",
           sunset: "19:45",
+          pressure: "1016",
+          visibility: "15",
         },
 
         // US Cities
@@ -429,6 +681,8 @@
           uv: "2",
           sunrise: "06:50",
           sunset: "19:40",
+          pressure: "1014",
+          visibility: "6",
         },
         "los angeles": {
           temp: "24°C",
@@ -440,6 +694,8 @@
           uv: "8",
           sunrise: "06:25",
           sunset: "19:10",
+          pressure: "1017",
+          visibility: "16",
         },
         houston: {
           temp: "28°C",
@@ -451,6 +707,8 @@
           uv: "7",
           sunrise: "06:40",
           sunset: "19:35",
+          pressure: "1013",
+          visibility: "9",
         },
         "washington dc": {
           temp: "20°C",
@@ -462,6 +720,8 @@
           uv: "5",
           sunrise: "06:35",
           sunset: "19:25",
+          pressure: "1019",
+          visibility: "11",
         },
         miami: {
           temp: "29°C",
@@ -473,6 +733,8 @@
           uv: "9",
           sunrise: "06:55",
           sunset: "19:50",
+          pressure: "1015",
+          visibility: "10",
         },
 
         // European Cities
@@ -486,6 +748,8 @@
           uv: "2",
           sunrise: "06:15",
           sunset: "19:55",
+          pressure: "1011",
+          visibility: "7",
         },
         moscow: {
           temp: "6°C",
@@ -497,6 +761,8 @@
           uv: "1",
           sunrise: "05:30",
           sunset: "19:00",
+          pressure: "1020",
+          visibility: "10",
         },
 
         // Middle East
@@ -510,6 +776,8 @@
           uv: "10",
           sunrise: "06:00",
           sunset: "18:45",
+          pressure: "1005",
+          visibility: "10",
         },
 
         // Asian Cities
@@ -523,6 +791,8 @@
           uv: "8",
           sunrise: "07:05",
           sunset: "19:15",
+          pressure: "1009",
+          visibility: "8",
         },
         "hong kong": {
           temp: "26°C",
@@ -534,6 +804,8 @@
           uv: "6",
           sunrise: "06:20",
           sunset: "18:50",
+          pressure: "1010",
+          visibility: "6",
         },
         beijing: {
           temp: "16°C",
@@ -545,6 +817,8 @@
           uv: "4",
           sunrise: "05:55",
           sunset: "18:40",
+          pressure: "1018",
+          visibility: "3",
         },
         seoul: {
           temp: "17°C",
@@ -556,16 +830,26 @@
           uv: "5",
           sunrise: "06:10",
           sunset: "19:05",
+          pressure: "1016",
+          visibility: "12",
         },
       };
 
-      function getWeather() {
-        const city = document.getElementById("cityInput").value;
+      // PR1: async function with loading state
+      async function getWeather() {
+        if (isLoading) return;
+
+        const city = document.getElementById("cityInput").value.trim();
 
         if (!city) {
           showError("Please enter a city name!");
           return;
         }
+
+        setLoading(true);
+
+        // Simulate API delay (PR1: loading animation)
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Saving the searched city to the history
         addHistory();
@@ -588,58 +872,48 @@
             uv: "4",
             sunrise: "06:30",
             sunset: "19:00",
+            pressure: "1013",
+            visibility: "10",
           };
           document.getElementById("errorMessage").innerHTML =
             "Note: You typed a city not on the list, but don't worry the open-meteo API is coming soon, fake data is shown in the meantime!";
         }
 
         displayWeather(city, weather);
-        updatePanels(weather);
+        updatePanels(weather, city);
+
+        setLoading(false);
       }
 
-      // cd backend
-      // ./mvnw spring-boot:run
-      /*
-        async function getWeather() {
-            const city = document.getElementById('cityInput').value;
-
-            if (!city) {
-                showError('Please enter a city name!');
-                return;
-            }
-
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/api/weather/current?city=${encodeURIComponent(city)}`
-                );
-
-                if (!response.ok) {
-                    throw new Error("API request failed");
-                }
-
-                const weather = await response.json();
-
-                displayWeather(city, weather);
-                updatePanels(weather);
-
-            } catch (error) {
-                console.error(error);
-                showError("Error loading weather data");
-            }
-        }
-        */
-
       function displayWeather(city, weather) {
+        // PR1: Add weather icon to result display
+        const weatherIcon = getWeatherIcon(weather.desc);
+
         document.getElementById("cityName").textContent = city.toUpperCase();
+        document.getElementById("weatherIcon").textContent = weatherIcon;
         document.getElementById("temperature").textContent = weather.temp;
         document.getElementById("description").textContent = weather.desc;
         document.getElementById("humidity").textContent =
           `Humidity: ${weather.humidity}`;
         document.getElementById("weatherResult").style.display = "block";
+
+        // PR1: Add fade animation to weather result
+        const weatherResult = document.getElementById("weatherResult");
+        weatherResult.style.animation = "none";
+        weatherResult.offsetHeight; // trigger reflow
+        weatherResult.style.animation = "fadeIn 0.5s ease-out";
       }
 
-      function updatePanels(weather) {
+      // PR1: Updated updatePanels with animations and new data
+      function updatePanels(weather, city = null) {
         const panels = document.querySelectorAll(".panel");
+
+        // PR1: Add fade animation to all panels when updating
+        panels.forEach((panel) => {
+          panel.classList.remove("panel-fade-in");
+          panel.offsetHeight; // trigger reflow
+          panel.classList.add("panel-fade-in");
+        });
 
         // Panel 1 - Temperature
         panels[0].querySelector(".temp").textContent = weather.temp;
@@ -663,20 +937,56 @@
         panels[2].querySelector(".extra-info").textContent =
           `Direction: ${weather.windDir}`;
 
-        // Panel 4 - UV Index
+        // Panel 4 - Forecast (PR1: Updated with weather icon)
+        const weatherIcon = getWeatherIcon(weather.desc);
+        panels[3].querySelector(".temp").innerHTML =
+          `${weatherIcon} ${weather.desc}`;
+        panels[3].querySelector(".extra-info").textContent =
+          `Next: Similar conditions`;
+
+        // Panel 5 - UV Index
         panels[4].querySelector(".temp").textContent = weather.uv;
         let protection =
           weather.uv > 6
-            ? "Sunscreen needed"
+            ? "⚠️ Sunscreen needed"
             : weather.uv > 3
-              ? "Moderate"
-              : "Low";
+              ? "🟡 Moderate"
+              : "✅ Low";
         panels[4].querySelector(".extra-info").textContent =
           `Protection: ${protection}`;
 
-        // Panel 5 - Sunrise/Sunset
-        panels[5].querySelector(".temp").innerHTML = `${weather.sunrise}`;
-        panels[5].querySelector(".description").innerHTML = `${weather.sunset}`;
+        // Panel 6 - Sunrise/Sunset
+        panels[5].querySelector(".temp").innerHTML = `🌅 ${weather.sunrise}`;
+        panels[5].querySelector(".description").innerHTML =
+          `🌇 ${weather.sunset}`;
+
+        // PR1: Calculate day length
+        const sunriseHour = parseInt(weather.sunrise.split(":")[0]);
+        const sunsetHour = parseInt(weather.sunset.split(":")[0]);
+        let dayLength = sunsetHour - sunriseHour;
+        if (dayLength < 0) dayLength += 12;
+        panels[5].querySelector(".extra-info").textContent =
+          `Day length: ${dayLength}h`;
+
+        // PR1: Panel 7 - Air Quality (NEW)
+        const airQuality = getAirQuality(weather.desc, city);
+        panels[6].querySelector(".temp").textContent = airQuality.aqi;
+        panels[6].querySelector(".extra-info").textContent =
+          `Sensitive groups: ${airQuality.sensitive}`;
+
+        // PR1: Panel 8 - Pressure (NEW)
+        const pressure = weather.pressure || "1013";
+        panels[7].querySelector(".temp").textContent = `${pressure} hPa`;
+        panels[7].querySelector(".extra-info").textContent =
+          `Trend: ${getPressureTrend()}`;
+
+        // PR1: Panel 9 - Visibility (NEW)
+        const visibility = weather.visibility || "10";
+        let visibilityText =
+          visibility >= 10 ? "Excellent" : visibility >= 5 ? "Good" : "Poor";
+        panels[8].querySelector(".temp").textContent = `${visibility} km`;
+        panels[8].querySelector(".extra-info").textContent =
+          `Conditions: ${visibilityText}`;
       }
 
       function showError(message) {
@@ -719,6 +1029,7 @@
           li.addEventListener("click", () => {
             input.value = li.textContent;
             pop.hidePopover();
+            getWeather(); // PR1: Auto-search when clicking history
           });
         });
       }
@@ -741,16 +1052,16 @@
 
       /* changed function: if input == duplicate { remove prev and push new } */
       function addHistory() {
-        const input = document.getElementById("cityInput").value.trim();
+        const inputValue = document.getElementById("cityInput").value.trim();
 
-        if (!input) return;
+        if (!inputValue) return;
 
-        const index = searchHistory.indexOf(input);
+        const index = searchHistory.indexOf(inputValue);
         if (index !== -1) {
           searchHistory.splice(index, 1);
         }
 
-        searchHistory.push(input);
+        searchHistory.push(inputValue);
 
         if (searchHistory.length > 5) {
           searchHistory.shift();
