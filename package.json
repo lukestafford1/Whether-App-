@@ -1,0 +1,31 @@
+{
+  "name": "whether-app-",
+  "version": "1.0.0",
+  "description": "Rules:   !!!Always use \"git pull origin main\" before creating a PR!!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "audit": "npm audit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukestafford1/Whether-App-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lukestafford1/Whether-App-/issues"
+  },
+  "homepage": "https://github.com/lukestafford1/Whether-App-#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "prettier": "^3.8.3"
+  }
+}
