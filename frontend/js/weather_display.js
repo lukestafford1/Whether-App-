@@ -1,7 +1,7 @@
 /*
 Function displayWeather() accepts 'data' variable with 'weather' object
 returns weather->this to user for visualization and processing (if needed)
-*/
+
 function displayWeather(data) {
   if (!data || typeof data !== "object") {
     throw new Error("Invalid weather data");
@@ -29,4 +29,4 @@ function displayWeather(data) {
 
 if (typeof module !== "undefined") {
   module.exports = { displayWeather };
-}
+} */
