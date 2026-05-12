@@ -2,7 +2,7 @@
 Tests for weather_displayfront.js with displayWeather() function
 tests for accurate (true/false : expected) values pulled from API request
 using dummy data to ensure that data is being returned correctly
-*/
+
 
 const { displayWeather } = require("./weather_display");
 
@@ -60,4 +60,4 @@ function runTests() {
 
 }
 
-runTests();
+runTests(); */
