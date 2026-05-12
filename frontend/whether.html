@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>"Whether" App | Real-time Weather Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
       * {
         margin: 0;
@@ -751,6 +752,69 @@
           padding: 20px;
         }
       }
+      .map-panel-wrapper {
+        background: linear-gradient(135deg, rgba(102,126,234,0.85) 0%, rgba(118,75,162,0.85) 100%);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 10px 0 30px 0;
+        box-shadow: 0 10px 30px var(--shadow-color);
+        cursor: default;
+      }
+      .map-panel-wrapper h3 {
+        color: white;
+        font-size: 1.3em;
+        font-weight: normal;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(255,255,255,0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .map-search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .map-search-row input {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 50px;
+        border: none;
+        font-size: 15px;
+        color: #333;
+        outline: none;
+        background: rgba(255,255,255,0.95);
+      }
+      .map-search-row input:focus {
+        box-shadow: 0 0 0 3px rgba(255,255,255,0.4);
+      }
+      .map-search-row button {
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: none;
+        background: rgba(255,255,255,0.25);
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        white-space: nowrap;
+      }
+      .map-search-row button:hover {
+        background: rgba(255,255,255,0.4);
+        transform: scale(1.04);
+      }
+      #leafletMap {
+        width: 100%;
+        height: 500px;
+        border-radius: 14px;
+      }
+      .map-hint {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.85em;
+        text-align: center;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -857,6 +921,22 @@
         </button>
       </div>
 
+      <!-- Map Panel -->
+      <div class="map-panel-wrapper">
+        <h3>🗺️ Map Search</h3>
+        <div class="map-search-row">
+          <input
+             id="mapSearchInput"
+             type="text"
+             placeholder="Search a location..."
+             onkeydown="if(event.key==='Enter') searchOnMap()"
+            />
+           <button onclick="searchOnMap()">🔍 Go</button>
+        </div>
+        <div id="leafletMap"></div>
+        <div class="map-hint">💡 Click anywhere on the map to drop a pin</div>
+      </div>
+
       <!-- Weather Result Display -->
       <div id="weatherResult" class="weather-result" style="display: none">
         <h2 id="cityName"></h2>
@@ -934,6 +1014,7 @@
         </div>
       </div>
     </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
       /* ---------- DARK MODE & LOCALSTORAGE ---------- */
@@ -1305,6 +1386,52 @@
       inp.addEventListener("blur", () =>
         setTimeout(() => pop.hidePopover(), 200),
       );
+      
+      /* ---------- MAP PANEL ---------- */
+      let leafletMap = null;
+      let mapMarker = null;
+
+      function initLeafletMap() {
+        if (leafletMap) return;
+        leafletMap = L.map("leafletMap").setView([20, 0], 2);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(leafletMap);
+
+        leafletMap.on("click", function (e) {
+          const { lat, lng } = e.latlng;
+          placeMapMarker(lat, lng, `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+        });
+      }
+
+      function placeMapMarker(lat, lng, label) {
+        if (mapMarker) leafletMap.removeLayer(mapMarker);
+        mapMarker = L.marker([lat, lng])
+          .addTo(leafletMap)
+          .bindPopup(label)
+          .openPopup();
+        document.getElementById("mapSearchInput").value = label;
+      }
+
+      async function searchOnMap() {
+        const query = document.getElementById("mapSearchInput").value.trim();
+        if (!query) return;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          const data = await res.json();
+          if (!data.length) { alert("Location not found. Try a different name."); return; }
+          const { lat, lon, display_name } = data[0];
+          leafletMap.setView([lat, lon], 10);
+          placeMapMarker(lat, lon, display_name);
+        } catch (err) {
+          alert("Search failed. Check your connection and try again.");
+        }
+      }
+
+      window.addEventListener("load", initLeafletMap);
       loadPreferences();
     </script>
   </body>
