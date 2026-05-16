@@ -38,7 +38,7 @@ class WeatherControllerTest {
 				"UK", "LND", testCity, 12.0, 10.0, "Cloudy", 78, 15.0, "NW", 3, "06:45", "19:30", 1015, 8
 		);
 
-		when(weatherService.getMockWeather(testCity)).thenReturn(mockResponse);
+		when(weatherService.getWeather(testCity)).thenReturn(mockResponse);
 
 
 		mockMvc.perform(get("/api/weather/current")
