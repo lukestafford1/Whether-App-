@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class WeatherController {
 
-    private WeatherService weatherService;
+	private WeatherService weatherService;
 
-    public WeatherController(WeatherService weatherService) {
-        this.weatherService = weatherService;
-    }//constructor injection
+	public WeatherController(WeatherService weatherService) {
+		this.weatherService = weatherService;
+	}//constructor injection
 
-    @GetMapping("/api/weather/current")
-    public ResponseEntity<WeatherDto> getCurrentWeather(@RequestParam(value = "city", defaultValue = "Bellevue") String city){
+	@GetMapping("/api/weather/current")
+	public ResponseEntity<WeatherDto> getCurrentWeather(@RequestParam(value = "city", defaultValue = "Bellevue") String city) {
 
-        WeatherDto mockWeather = weatherService.getMockWeather(city);
-        return ResponseEntity.ok(mockWeather);
-    }
+		WeatherDto mockWeather = weatherService.getWeather(city);
+		return ResponseEntity.ok(mockWeather);
+	}
 }
