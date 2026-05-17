@@ -946,20 +946,18 @@
     <div class="bottom-panel">
       <h3>Weather Dashboard</h3>
       <p>
-        Real-time insights with interactive panels. Dark mode, search history,
-        and detailed weather metrics.
+        Real-time insights and detailed weather metrics.
       </p>
       <div class="footer-links">
         <button id="bottomAboutBtn">📖 About "Whether" App</button>
         <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
-        <button onclick="window.print()">🖨️ Print</button>
         <a href="#" onclick="
               scrollToTop();
               return false;
             ">⬆️ Back to Top</a>
       </div>
       <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
-        Created by The Whether App Team | Version 1.0
+        Created by the "Whether" App Team | Version 1.0
       </p>
     </div>
   </div>
@@ -970,11 +968,11 @@
       <button class="close-about-btn" id="closeAboutOverlayBtn">
         &times;
       </button>
-      <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
+      <h2><span class="about-icon">🌤️</span> About the "Whether" App</h2>
       <div class="about-description">
         <p>
           Your go-to destination for accurate, real-time weather information
-          from around the globe. Whether you’re planning a trip, checking
+          from around the globe. Whether you're planning a trip, checking
           local conditions, or just curious about the weather, our app
           provides comprehensive data in a clear and easy-to-read format.
         </p>
@@ -989,14 +987,13 @@
         <span>📜 Search history</span>
         <span>🖱️ Scrollable cards</span>
         <span>📱 Fully responsive</span>
-        <span>🖨️ Print-friendly</span>
       </div>
       <div class="about-footer">
         <p>
           Powered by mock weather data · Open-Meteo API integration planned
         </p>
         <p style="margin-top: 8px">
-          &copy; 2026 "WhetheR" App Team! — CSS 360 A.
+          Brought to you by the "Whether" App Team!
         </p>
       </div>
     </div>
@@ -1236,10 +1233,10 @@
       return "🌤️";
     }
     function getAirQuality(desc, city) {
-      return { aqi: "Moderate", sensitive: "Sensitive groups: caution" };
+      return { aqi: "Moderate", sensitive: "Sensitive groups: Be cautious" };
     }
     function getPressureTrend() {
-      return "Stable ➡️";
+      return "Stable";
     }
     let isLoading = false;
     async function getWeather() {
@@ -1315,8 +1312,8 @@
       p[4].querySelector(".temp").textContent = w.uv;
       p[4].querySelector(".extra-info").textContent =
         w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
-      p[5].querySelector(".temp").innerHTML = `🌅 ${w.sunrise}`;
-      p[5].querySelector(".description").innerHTML = `🌇 ${w.sunset}`;
+      p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
+      p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
       let day =
         parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
       if (day < 0) day += 12;
