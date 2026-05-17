@@ -28,6 +28,9 @@ public class SecurityConfig {
 			return http
 					.authorizeHttpRequests(authorize -> authorize
 							.requestMatchers("/EntraIDLockTest.html").authenticated()
+							.requestMatchers("/whether.html").authenticated()
+							//Locking the actual backend API endpoint for security testing:
+							.requestMatchers("/api/weather/**").authenticated()
 							.anyRequest().permitAll()
 					)
 					.oauth2Login(oauth2 -> oauth2

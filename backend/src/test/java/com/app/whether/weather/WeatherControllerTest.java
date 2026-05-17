@@ -19,13 +19,15 @@ class WeatherControllerTest {
 
 	@BeforeEach
 	void setup() {
-		// 1. Manually create a fake service (Bypasses Spring Boot 4's missing @MockBean)
+		// 1. Mock the service AND the new repositories
 		weatherService = Mockito.mock(WeatherService.class);
+		AppUserRepository userRepository = Mockito.mock(AppUserRepository.class);
+		SearchHistoryRepository historyRepository = Mockito.mock(SearchHistoryRepository.class);
 
-		// 2. Inject it into a real controller
-		WeatherController controller = new WeatherController(weatherService);
+		// 2. Inject all three into the controller
+		WeatherController controller = new WeatherController(weatherService, userRepository, historyRepository);
 
-		// 3. Build a standalone test environment (Bypasses Security and @WebMvcTest)
+		// 3. Build the test environment
 		mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}
 
