@@ -29,21 +29,20 @@ public class WeatherController {
 			@RequestParam(value = "city", defaultValue = "Bellevue") String city,
 			@AuthenticationPrincipal OAuth2User principal) {
 
-		// 1. Intercept user and save history IF they are logged in
 		if (principal != null) {
-			// Entra ID stores the user's email under "preferred_username" or "email"
 			String email = principal.getAttribute("preferred_username");
 			String name = principal.getAttribute("name");
 
-			// Find them in the DB, or create a new row if it's their first time logging in
 			AppUser user = userRepository.findByEmail(email)
 					.orElseGet(() -> userRepository.save(new AppUser(email, name)));
 
-			// Save the search
-			historyRepository.save(new SearchHistory(user, city));
+			SearchHistory existingSearch = historyRepository.findByUserAndCitySearchedIgnoreCase(user, city);
+
+			if (existingSearch == null) {
+				historyRepository.save(new SearchHistory(user, city));
+			}
 		}
 
-		// 2. Fetch the live weather and return it to the frontend
 		WeatherDto liveWeather = weatherService.getWeather(city);
 		return ResponseEntity.ok(liveWeather);
 	}
@@ -51,21 +50,20 @@ public class WeatherController {
 	@GetMapping("/api/weather/history")
 	public ResponseEntity<List<String>> getSearchHistory(@AuthenticationPrincipal OAuth2User principal) {
 
-		// 1. Grab the email from the Entra ID token
+		if (principal == null) {
+			return ResponseEntity.ok(List.of());
+		}
+
 		String email = principal.getAttribute("preferred_username");
 
-		// 2. Find the user in the DB. If they exist, get their history.
 		return userRepository.findByEmail(email)
 				.map(user -> {
-					// Fetch history, extract just the city names, and put them into a List
-					List<String> cities = historyRepository.findByUserOrderBySearchTimeDesc(user)
+					List<String> cities = historyRepository.findByUser(user)
 							.stream()
 							.map(SearchHistory::getCitySearched)
 							.toList();
 					return ResponseEntity.ok(cities);
 				})
-				// 3. If the user isn't in the DB yet, just return an empty array []
 				.orElse(ResponseEntity.ok(List.of()));
 	}
-
 }
