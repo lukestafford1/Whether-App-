@@ -167,15 +167,13 @@
       /* Gentle pulse animation for panels on hover */
       @keyframes gentlePulse {
         0% {
-          transform: scale(1);
+          transform: translateY(-5px);
         }
-
         50% {
-          transform: scale(1.02);
+          transform: translateY(-12px);
         }
-
         100% {
-          transform: scale(1);
+          transform: translateY(-5px);
         }
       }
 
@@ -320,7 +318,7 @@
         padding: 25px;
         box-shadow: 0 10px 30px var(--shadow-color);
         transition:
-          transform 0.3s ease,
+          transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1),
           box-shadow 0.3s ease;
         flex-shrink: 0;
         cursor: pointer;
@@ -330,7 +328,6 @@
       .panel:hover {
         transform: translateY(-10px);
         box-shadow: 0 20px 40px var(--shadow-color);
-        animation: gentlePulse 0.5s ease-in-out;
       }
 
       .panel-fade-in {
@@ -881,7 +878,6 @@
         <div class="panel panel-small" data-panel="temp">
           <h3>🌡️ Current Temp</h3>
           <div class="temp">--°C</div>
-          <div class="description">Click "Get Weather"</div>
           <div class="extra-info">Feels like: --°C</div>
         </div>
         <div class="panel panel-medium" data-panel="humidity">
