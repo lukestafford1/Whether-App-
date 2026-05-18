@@ -836,7 +836,7 @@
   </head>
 
   <body>
-    <!-- Options Menu (fixed top-right) -->
+    <!-- Options Menu -->
     <div class="options-menu-container">
       <button class="options-btn" id="optionsBtn" onclick="toggleOptionsMenu()">
         ⚙️ <span>Options</span>
@@ -979,7 +979,9 @@
         </p>
         <div class="footer-links">
           <button id="bottomAboutBtn">📖 About "Whether" App</button>
-          <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+          <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
+            🌙 Dark Mode
+          </button>
           <button onclick="window.print()">🖨️ Print</button>
           <a
             href="#"
