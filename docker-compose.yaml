@@ -14,5 +14,22 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  spring-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: weather_backend
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/weather_db
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-weather_user}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-weather_password}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+
 volumes:
   mysql_data:
