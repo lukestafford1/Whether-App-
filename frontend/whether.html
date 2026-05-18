@@ -1157,6 +1157,56 @@
 
     let isLoading = false;
 
+    async function getWeather() {
+        if (isLoading) return;
+
+        const city = document.getElementById("cityInput").value.trim();
+
+        if (!city) {
+            showError("Please enter a city name!");
+            return;
+        }
+
+        localStorage.setItem("lastCity", city);
+        isLoading = true;
+        const btn = document.getElementById("searchBtn");
+        btn.classList.add("loading");
+        btn.disabled = true;
+
+        try {
+            // Hit your live Spring Boot Backend
+            const response = await fetch(`/api/weather/current?city=${encodeURIComponent(city)}`);
+
+            // If Entra ID intercepted the call (session expired), force a redirect to login
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch from API");
+            }
+
+            const weather = await response.json();
+            document.getElementById("errorMessage").innerHTML = "";
+
+            // Display the live data
+            displayWeather(city, weather);
+            updatePanels(weather, city);
+
+            // Refresh the dropdown history from the DB since we just searched!
+            await fetchHistory();
+
+        } catch (err) {
+            showError("Server error or city not found. Is the backend running?");
+            console.error(err);
+        } finally {
+            btn.classList.remove("loading");
+            btn.disabled = false;
+            isLoading = false;
+        }
+    }
+
 
     function displayWeather(city, w) {
         document.getElementById("cityName").textContent = city.toUpperCase();
