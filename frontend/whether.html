@@ -1282,15 +1282,32 @@
         });
     }
 
-    // Creates an array and list for the search history
-    const searchHistory = [];
+    let searchHistory = [];
     const list = document.querySelector("#history ul");
+
+
+    async function fetchHistory() {
+        try {
+            const res = await fetch("/api/weather/history");
+            if (res.redirected) {
+                window.location.href = res.url;
+                return;
+            }
+            if (res.ok) {
+                searchHistory = await res.json();
+                visibleHistoryFix();
+            }
+        } catch (err) {
+            console.error("Failed to load DB history", err);
+        }
+    }
 
     // Updates the shown search history
     function visibleHistoryFix() {
         list.innerHTML = "";
 
-        searchHistory.forEach((item) => {
+        // Take top 5 recent searches
+        searchHistory.slice(0, 5).forEach((item) => {
             const li = document.createElement("li");
             li.textContent = item;
             list.appendChild(li);
