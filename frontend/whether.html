@@ -1368,7 +1368,10 @@
         }
     }
 
-    window.addEventListener("load", initLeafletMap);
+    window.addEventListener("load", () => {
+        initLeafletMap();
+        fetchHistory();
+    });
     loadPreferences();
 </script>
 </body>
