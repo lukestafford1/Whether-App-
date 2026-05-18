@@ -28,6 +28,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/weather_db
       - SPRING_DATASOURCE_USERNAME=${DB_USER:-weather_user}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-weather_password}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
 
 volumes:
   mysql_data:
