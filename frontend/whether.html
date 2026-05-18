@@ -1157,51 +1157,6 @@
 
     let isLoading = false;
 
-    async function getWeather() {
-        if (isLoading) return;
-
-        const city = document.getElementById("cityInput").value.trim();
-
-        if (!city) {
-            showError("Please enter a city name!");
-            return;
-        }
-
-        localStorage.setItem("lastCity", city);
-        isLoading = true;
-        const btn = document.getElementById("searchBtn");
-        btn.classList.add("loading");
-        btn.disabled = true;
-        await new Promise((r) => setTimeout(r, 400));
-
-        // Saving the searched city to the history
-        addHistory();
-
-        const low = city.toLowerCase();
-        let weather = mockWeatherData[low];
-        if (!weather) {
-            weather = {
-                temp: "22°C",
-                feelsLike: "21°C",
-                desc: "Partly cloudy",
-                humidity: "70%",
-                wind: "10 km/h",
-                windDir: "Variable",
-                uv: "4",
-                sunrise: "06:30",
-                sunset: "19:00",
-                pressure: "1013",
-                visibility: "10",
-            };
-            document.getElementById("errorMessage").innerHTML =
-                "Demo data shown. Full API support coming!";
-        } else document.getElementById("errorMessage").innerHTML = "";
-        displayWeather(city, weather);
-        updatePanels(weather, city);
-        btn.classList.remove("loading");
-        btn.disabled = false;
-        isLoading = false;
-    }
 
     function displayWeather(city, w) {
         document.getElementById("cityName").textContent = city.toUpperCase();
