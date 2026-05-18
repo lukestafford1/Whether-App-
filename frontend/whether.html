@@ -1137,7 +1137,6 @@
         window.scrollTo({top: 0, behavior: "smooth"});
     }
 
-
     function getWeatherIcon(desc) {
         const d = desc.toLowerCase();
         if (d.includes("sun") || d.includes("clear") || d.includes("hot"))
@@ -1299,25 +1298,6 @@
         fixClickHandlers();
     }
 
-    // Adds search to history if it's not a duplicate
-    function addHistory() {
-        const input = document.getElementById("cityInput").value.trim();
-
-        if (!input) return;
-
-        const index = searchHistory.indexOf(input);
-        if (index !== -1) {
-            searchHistory.splice(index, 1);
-        }
-
-        searchHistory.push(input);
-
-        if (searchHistory.length > 5) {
-            searchHistory.shift();
-        }
-
-        visibleHistoryFix();
-    }
 
     /* ---------- MAP PANEL ---------- */
     let leafletMap = null;
