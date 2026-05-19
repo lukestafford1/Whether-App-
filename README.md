@@ -24,7 +24,6 @@ Before running the pipeline, ensure the following is running:
 
 1. **Docker Desktop** (Must be open and running in the background)
 2. **Git Bash** (Recommended for Windows execution)
-3. **Java 21**
 
 ## Environment Setup (Secrets)
 
@@ -32,9 +31,7 @@ As per requirements, our database credentials and OAuth2 Entra ID secrets are **
 
 1. Please locate the password-protected `.zip` file sent via email to the professor.
 2. Extract the contents.
-3. Place the `.env` file into the root directory of this repository before executing the pipeline. *(Note: If the `.env`
-   file is missing, the Spring Boot application will fail to authenticate with the database and the Microsoft identity
-   provider).*
+3. Place the `.env` file into the root directory of this repository before executing the pipeline.
 
 ## How to Run the Pipeline
 
@@ -48,20 +45,34 @@ As per requirements, our database credentials and OAuth2 Entra ID secrets are **
 
 ## What the pipeline does:
 
-1. It "pulls the latest code" **_(just printing, not actually pulling, since we are not using something like github
-   actions)_**
-2. It runs static analysis **_(Checkstyle for backend)_**
+1. **Pulls the latest code:** *(just printing, not actually pulling, simulating a CI/CD runner)*
+2. **Multi-Stage Docker Build Starts**
+3. **Isolated Testing:** Runs static analysis (Checkstyle) and Unit Tests **inside** the Docker build
+   environment.
 
-   **_(Note: Build failure on violation is currently set to false, meaning
-   even if there are static analysis violations, it will complete the deployment,
-   and can be turned off by switching the boolean flag. This is just to prove that
-   we understand how to run static analysis.)_**
-3. It runs the unit tests
-4. It packages the .jar file and builds the docker images
-5. Deploys the local Docker prod environment
-6. Finally, It runs a smoke test
-   **_(Checks if 1. The spring boot server is alive (not returning 000) and that Entra ID is securing
-   the page (returning HTTP 302))_**
+*(Note: Build failure on violation is currently set to false, meaning even if there are static analysis violations, it
+will complete the deployment. This proves we understand how to integrate static analysis into containerized builds.)*
+
+4. **Packaging:** Packages the `.jar` file and builds the lightweight production Docker image.
+5. **Deployment:** Deploys the local Docker production environment (Spring Boot + MySQL).
+6. **Smoke Test:** Runs a check to verify the Spring Boot server is alive and that Entra ID is
+   securing the page (expecting HTTP 302 or HTTP 200).
+
+## Troubleshooting
+
+If you experience database authentication errors (`Access denied`), port conflicts, or the pipeline seems to be using
+old cached code, run these commands in Git Bash to force a clean build:
+
+```bash
+# 1. Stop containers and destroy the corrupted database volume
+docker-compose down -v
+
+# 2. Clear out old cached build layers (Type 'y' to confirm)
+docker system prune -a --volumes
+
+# 3. Re-run the pipeline
+./pipeline.sh
+```
 
 ## Viewing the Application
 
@@ -71,5 +82,5 @@ Once the pipeline script completes and prints the success message, the applicati
 2. Navigate to: [http://localhost:8080/whether.html](http://localhost:8080/whether.html)
 3. You will be immediately intercepted by Spring Security and redirected to the Microsoft Entra ID login portal to
    authenticate.
-4. A valid login and password will be provided along with the secrets to the professor's email.
+4. A valid login and password has been provided along with the secrets to the professor's email.
 
