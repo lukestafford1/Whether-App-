@@ -840,7 +840,6 @@
         <button id="darkModeToggleBtn" onclick="toggleDarkMode()">
             <span>🌙 Dark Mode</span>
         </button>
-        <button onclick="window.print()"><span>🖨️ Print Page</span></button>
         <hr/>
         <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
         <button id="aboutPageBtn"><span>📖 About "Whether" App</span></button>
@@ -884,8 +883,7 @@
         <div class="panel panel-large" data-panel="wind">
             <h3>💨 Wind Speed</h3>
             <div class="temp">-- km/h</div>
-            <div class="description">Wind Direction</div>
-            <div class="extra-info">Direction: --</div>
+            <div class="description">Direction: --</div>
         </div>
         <div class="panel panel-cool" data-panel="forecast">
             <h3>📅 3-Day Forecast</h3>
@@ -905,17 +903,9 @@
             <div class="description">--:--</div>
             <div class="extra-info">Day length: --h</div>
         </div>
-        <div class="panel panel-air" data-panel="air">
-            <h3>🌿 Air Quality</h3>
-            <div class="temp">--</div>
-            <div class="description">Air Quality Index</div>
-            <div class="extra-info">Sensitive groups: --</div>
-        </div>
         <div class="panel panel-small" data-panel="pressure">
             <h3>📊 Pressure</h3>
             <div class="temp">-- hPa</div>
-            <div class="description">Atmospheric Pressure</div>
-            <div class="extra-info">Trend: --</div>
         </div>
         <div class="panel panel-medium" data-panel="visibility">
             <h3>👁️ Visibility</h3>
@@ -969,15 +959,13 @@
     <div class="bottom-panel">
         <h3>Weather Dashboard</h3>
         <p>
-            Real-time insights with interactive panels. Dark mode, search history,
-            and detailed weather metrics.
+            Real-time insights with detailed weather metrics.
         </p>
         <div class="footer-links">
             <button id="bottomAboutBtn">📖 About "Whether" App</button>
             <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
                 🌙 Dark Mode
             </button>
-            <button onclick="window.print()">🖨️ Print</button>
             <a
                     href="#"
                     onclick="
@@ -988,7 +976,7 @@
             >
         </div>
         <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
-            Created by The Whether App Team | Version 1.0
+            Created by the "Whether" App Team | Version 1.0
         </p>
     </div>
 </div>
@@ -1003,14 +991,13 @@
         <div class="about-description">
             <p>
                 Your go-to destination for accurate, real-time weather information
-                from around the globe. Whether you’re planning a trip, checking
+                from around the globe. Whether you're planning a trip, checking
                 local conditions, or just curious about the weather, our app
                 provides comprehensive data in a clear and easy-to-read format.
             </p>
         </div>
         <div class="coverage-badge">
-            🌍 <strong>Current Coverage:</strong> 15+ major cities worldwide with
-            mock data. Real API coming soon!
+            🌍 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
         </div>
         <div class="feature-list">
             <span>✨ Interactive panels</span>
@@ -1018,14 +1005,13 @@
             <span>📜 Search history</span>
             <span>🖱️ Scrollable cards</span>
             <span>📱 Fully responsive</span>
-            <span>🖨️ Print-friendly</span>
         </div>
         <div class="about-footer">
             <p>
-                Powered by mock weather data · Open-Meteo API integration planned
+                Powered by Open-Meteo API
             </p>
             <p style="margin-top: 8px">
-                &copy; 2026 "WhetheR" App Team! — CSS 360 A.
+                Brought to you by the "Whether" App Team!
             </p>
         </div>
     </div>
@@ -1147,14 +1133,6 @@
         return "🌤️";
     }
 
-    function getAirQuality(desc, city) {
-        return {aqi: "Moderate", sensitive: "Sensitive groups: caution"};
-    }
-
-    function getPressureTrend() {
-        return "Stable ➡️";
-    }
-
     let isLoading = false;
 
     async function getWeather() {
@@ -1213,43 +1191,42 @@
         document.getElementById("weatherIcon").textContent = getWeatherIcon(
             w.desc
         );
-        document.getElementById("temperature").textContent = w.temp;
+        document.getElementById("temperature").textContent =
+            `${w.temp}°C`;
         document.getElementById("description").textContent = w.desc;
         document.getElementById("humidity").textContent =
-            `Humidity: ${w.humidity}`;
+            `Humidity: ${w.humidity}%`;
         document.getElementById("weatherResult").style.display = "block";
     }
 
     function updatePanels(w, city) {
         const p = document.querySelectorAll(".panel");
-        p[0].querySelector(".temp").textContent = w.temp;
+        p[0].querySelector(".temp").textContent = 
+            `${w.temp}°C`;
         p[0].querySelector(".extra-info").textContent =
-            `Feels like: ${w.feelsLike}`;
-        p[1].querySelector(".temp").textContent = w.humidity;
+            `Feels like: ${w.feelsLike}°C`;
+        p[1].querySelector(".temp").textContent = 
+            `${w.humidity}%`;
         p[1].querySelector(".extra-info").textContent =
             `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`;
-        p[2].querySelector(".temp").textContent = w.wind;
-        p[2].querySelector(".extra-info").textContent =
+        p[2].querySelector(".temp").textContent = 
+            `${w.wind} km/h`;
+        p[2].querySelector(".description").textContent =
             `Direction: ${w.windDir}`;
         p[3].querySelector(".temp").innerHTML =
-            `${getWeatherIcon(w.desc)} ${w.desc}`;
+            `${w.desc} ${getWeatherIcon(w.desc)}`;
         p[4].querySelector(".temp").textContent = w.uv;
         p[4].querySelector(".extra-info").textContent =
             w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
-        p[5].querySelector(".temp").innerHTML = `🌅 ${w.sunrise}`;
-        p[5].querySelector(".description").innerHTML = `🌇 ${w.sunset}`;
+        p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
+        p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
         let day =
             parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
         if (day < 0) day += 12;
         p[5].querySelector(".extra-info").textContent = `Day length: ${day}h`;
-        const aq = getAirQuality(w.desc, city);
-        p[6].querySelector(".temp").textContent = aq.aqi;
-        p[6].querySelector(".extra-info").textContent = aq.sensitive;
-        p[7].querySelector(".temp").textContent = `${w.pressure} hPa`;
+        p[6].querySelector(".temp").textContent = `${w.pressure} hPa`;
+        p[7].querySelector(".temp").textContent = `${w.visibility} km`;
         p[7].querySelector(".extra-info").textContent =
-            `Trend: ${getPressureTrend()}`;
-        p[8].querySelector(".temp").textContent = `${w.visibility} km`;
-        p[8].querySelector(".extra-info").textContent =
             w.visibility >= 10 ? "Excellent" : "Good";
     }
 
