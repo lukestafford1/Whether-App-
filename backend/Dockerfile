@@ -1,13 +1,17 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+WORKDIR /build
 
-# Create a dedicated directory for the app
+COPY backend/ backend/
+WORKDIR /build/backend
+
+RUN mvn clean checkstyle:check verify -Dcheckstyle.failsOnError=false -Dcheckstyle.failOnViolation=false
+
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy the compiled Java application
-COPY backend/target/*.jar app.jar
+COPY --from=builder /build/backend/target/*.jar app.jar
 
-# Copy the frontend folder into the container's working directory
 COPY frontend/ frontend/
 
-# Run the application
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

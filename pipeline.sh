@@ -4,30 +4,20 @@ echo "Starting Weather App CI/CD Pipeline:"
 #Pull the latest code
 echo "----------------------------------------"
 echo "Pulling latest code from main"
-# Simulating the pull for the script execution. In a real server, this runs:
-# git pull origin main
+# git pull origin main - Not really cause we aren't using something like github actions
 echo "Code pulled successfully."
-
-#Static Analysis, Unit, and Integration Tests
-echo "----------------------------------------"
-echo "Running Static Analysis and Tests:"
-echo "Note: I have way too many errors to fix like long lines so I made sure it completes the build, while also doing the"
-echo "analysis. The moment I turn these flags to true, they will stop the build immediately on analysis errors."
-echo "This is just to prove that we can run static analysis."
-cd backend
-./mvnw clean checkstyle:check verify -Dcheckstyle.failsOnError=false -Dcheckstyle.failOnViolation=false
-if [ $? -ne 0 ]; then
-    echo "Tests failed. NOT PROCEEDING."
-    exit 1
-fi
-echo "All tests passed. Code packaged successfully."
-cd ..
 
 #Package Image & Deploy to Prod
 echo "----------------------------------------"
 echo "Packaging Docker Images and Deploying to Production"
-# This builds the Spring Boot image and starts both backend and DB containers
+echo "Note: The build continues even if static checks fail (can be changed by a simple flag toggle)"
+
+
 docker-compose up -d --build
+if [ $? -ne 0 ]; then
+    echo "Docker build failed. Static analysis or Unit Tests may have failed. NOT PROCEEDING."
+    exit 1
+fi
 echo "Containers built and deployed."
 
 #Smoke Test
