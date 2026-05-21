@@ -776,45 +776,6 @@
             gap: 8px;
         }
 
-        .map-search-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .map-search-row input {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 50px;
-            border: none;
-            font-size: 15px;
-            color: #333;
-            outline: none;
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .map-search-row input:focus {
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
-        }
-
-        .map-search-row button {
-            padding: 10px 20px;
-            border-radius: 50px;
-            border: none;
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.2s,
-            transform 0.2s;
-            white-space: nowrap;
-        }
-
-        .map-search-row button:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(1.04);
-        }
-
         #leafletMap {
             width: 100%;
             height: 500px;
@@ -851,7 +812,7 @@
 
 <div class="dashboard">
     <h1>"Whether" App</h1>
-    <div class="subtitle">Learn about today's weather conditions!</div>
+
 
     <!-- Search Panel -->
     <div class="search-panel">
@@ -870,45 +831,45 @@
     <!-- Scrollable Panels Container -->
     <div class="panels-container" id="panelsContainer">
         <div class="panel panel-small" data-panel="temp">
-            <h3>🌡️ Current Temp</h3>
+            <h3> Current Temp</h3>
             <div class="temp">--°C</div>
             <div class="extra-info">Feels like: --°C</div>
         </div>
         <div class="panel panel-medium" data-panel="humidity">
-            <h3>💧 Humidity</h3>
+            <h3> Humidity</h3>
             <div class="temp">--%</div>
-            <div class="description">Moisture Level</div>
-            <div class="extra-info">Comfort: --</div>
+            <!--<div class="description">Moisture Level</div> -->
+            <!---<div class="extra-info">Comfort: --</div> -->
         </div>
         <div class="panel panel-large" data-panel="wind">
-            <h3>💨 Wind Speed</h3>
+            <h3> Wind Speed</h3>
             <div class="temp">-- km/h</div>
             <div class="description">Direction: --</div>
         </div>
         <div class="panel panel-cool" data-panel="forecast">
-            <h3>📅 3-Day Forecast</h3>
+            <h3> 3-Day Forecast</h3>
             <div class="temp">--</div>
             <div class="description">Upcoming weather</div>
             <div class="extra-info">Extended forecast coming soon</div>
         </div>
         <div class="panel panel-dark" data-panel="uv">
-            <h3>☀️ UV Index</h3>
+            <h3> UV Index</h3>
             <div class="temp">--</div>
             <div class="description">Sun Intensity</div>
             <div class="extra-info">Protection: --</div>
         </div>
         <div class="panel panel-warm" data-panel="sun">
-            <h3>🌅 Sunrise/Sunset</h3>
+            <h3> Sunrise/Sunset</h3>
             <div class="temp">--:--</div>
             <div class="description">--:--</div>
             <div class="extra-info">Day length: --h</div>
         </div>
         <div class="panel panel-small" data-panel="pressure">
-            <h3>📊 Pressure</h3>
+            <h3> Pressure</h3>
             <div class="temp">-- hPa</div>
         </div>
         <div class="panel panel-medium" data-panel="visibility">
-            <h3>👁️ Visibility</h3>
+            <h3> Visibility</h3>
             <div class="temp">-- km</div>
             <div class="description">Clear conditions</div>
             <div class="extra-info">Standard: 10+ km</div>
@@ -928,15 +889,6 @@
     <!-- Map Panel -->
     <div class="map-panel-wrapper">
         <h3>🗺️ Map Search</h3>
-        <div class="map-search-row">
-            <input
-                    id="mapSearchInput"
-                    type="text"
-                    placeholder="Search a location..."
-                    onkeydown="if (event.key === 'Enter') searchOnMap();"
-            />
-            <button onclick="searchOnMap()">🔍 Go</button>
-        </div>
         <div id="leafletMap"></div>
         <div class="map-hint">💡 Click anywhere on the map to drop a pin</div>
     </div>
@@ -1166,6 +1118,7 @@
             }
 
             const weather = await response.json();
+            lastWeatherData = weather;
             document.getElementById("errorMessage").innerHTML = "";
 
             // Display the live data
@@ -1174,6 +1127,7 @@
 
             // Refresh the dropdown history from the DB since we just searched!
             await fetchHistory();
+            await updateMapLocation(city);
 
         } catch (err) {
             showError("Server error or city not found. Is the backend running?");
@@ -1207,8 +1161,8 @@
             `Feels like: ${w.feelsLike}°C`;
         p[1].querySelector(".temp").textContent = 
             `${w.humidity}%`;
-        p[1].querySelector(".extra-info").textContent =
-            `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`;
+        /*p[1].querySelector(".extra-info").textContent =
+            `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`; */
         p[2].querySelector(".temp").textContent = 
             `${w.wind} km/h`;
         p[2].querySelector(".description").textContent =
@@ -1217,7 +1171,7 @@
             `${w.desc} ${getWeatherIcon(w.desc)}`;
         p[4].querySelector(".temp").textContent = w.uv;
         p[4].querySelector(".extra-info").textContent =
-            w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+            w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate"; 
         p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
         p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
         let day =
@@ -1226,8 +1180,8 @@
         p[5].querySelector(".extra-info").textContent = `Day length: ${day}h`;
         p[6].querySelector(".temp").textContent = `${w.pressure} hPa`;
         p[7].querySelector(".temp").textContent = `${w.visibility} km`;
-        p[7].querySelector(".extra-info").textContent =
-            w.visibility >= 10 ? "Excellent" : "Good";
+        /*p[7].querySelector(".extra-info").textContent =
+            w.visibility >= 10 ? "Excellent" : "Good"; */
     }
 
     function showError(msg) {
@@ -1301,6 +1255,7 @@
     /* ---------- MAP PANEL ---------- */
     let leafletMap = null;
     let mapMarker = null;
+    let lastWeatherData = null;
 
     function initLeafletMap() {
         if (leafletMap) return;
@@ -1315,31 +1270,73 @@
         });
     }
 
-    function placeMapMarker(lat, lng, label) {
+    function placeMapMarker(lat, lng, label, weather = null) {
         if (mapMarker) leafletMap.removeLayer(mapMarker);
+
+        let popupContent;
+        if (weather) {
+            const icon = getWeatherIcon(weather.desc);
+            const uvWarning = weather.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+            popupContent = `
+                <div style="font-family: Segoe UI, Arial, sans-serif; min-width: 180px;">
+                    <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">
+                        ${icon} ${label.split(",")[0]}
+                    </div>
+                    <div style="font-size: 1.6em; font-weight: bold; color: #667eea; margin: 4px 0;">
+                        ${weather.temp}°C
+                    </div>
+                    <div style="font-size: 0.85em; color: #555; margin-bottom: 6px;">
+                        Feels like ${weather.feelsLike}°C &bull; ${weather.desc}
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 6px 0;">
+                    <table style="width:100%; font-size: 0.82em; color: #444; border-collapse: collapse;">
+                        <tr><td>💧 Humidity</td><td style="text-align:right">${weather.humidity}%</td></tr>
+                        <tr><td>💨 Wind</td><td style="text-align:right">${weather.wind} km/h ${weather.windDir}</td></tr>
+                        <tr><td>☀️ UV Index</td><td style="text-align:right">${weather.uv} &mdash; ${uvWarning}</td></tr>
+                        <tr><td>📊 Pressure</td><td style="text-align:right">${weather.pressure} hPa</td></tr>
+                        <tr><td>👁️ Visibility</td><td style="text-align:right">${weather.visibility} km</td></tr>
+                        <tr><td>🌅 Sunrise</td><td style="text-align:right">${weather.sunrise}</td></tr>
+                        <tr><td>🌇 Sunset</td><td style="text-align:right">${weather.sunset}</td></tr>
+                    </table>
+                </div>`;
+        } else {
+            popupContent = label;
+        }
+
         mapMarker = L.marker([lat, lng])
             .addTo(leafletMap)
-            .bindPopup(label)
+            .bindPopup(popupContent, { maxWidth: 260 })
             .openPopup();
-        document.getElementById("mapSearchInput").value = label;
     }
 
     async function searchOnMap() {
         const query = document.getElementById("mapSearchInput").value.trim();
         if (!query) return;
         try {
-            const res = await fetch(
+            const geoRes = await fetch(
                 `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-                {headers: {"Accept-Language": "en"}}
+                { headers: { "Accept-Language": "en" } }
             );
-            const data = await res.json();
-            if (!data.length) {
-                alert("Location not found. Try a different name.");
-                return;
-            }
-            const {lat, lon, display_name} = data[0];
+            const geoData = await geoRes.json();
+            if (!geoData.length) { alert("Location not found."); return; }
+
+            const { lat, lon, display_name } = geoData[0];
             leafletMap.setView([lat, lon], 10);
-            placeMapMarker(lat, lon, display_name);
+
+            // Try fetching weather for the searched location
+            try {
+                const cityName = display_name.split(",")[0].trim();
+                const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(cityName)}`);
+                if (wRes.ok) {
+                    const w = await wRes.json();
+                    lastWeatherData = w;
+                    placeMapMarker(lat, lon, display_name, w);
+                    return;
+                }
+            } catch (_) {}
+
+            // Fallback: marker without weather if API call fails
+            placeMapMarker(lat, lon, display_name, null);
         } catch (err) {
             alert("Search failed. Check your connection and try again.");
         }
@@ -1350,6 +1347,21 @@
         fetchHistory();
     });
     loadPreferences();
+
+    async function updateMapLocation(city) {
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`
+            );
+            const data = await res.json();
+            if (!data.length) return;
+            const { lat, lon, display_name } = data[0];
+            leafletMap.setView([lat, lon], 9);
+            placeMapMarker(lat, lon, display_name, lastWeatherData);
+        } catch (err) {
+            console.error("Map update failed", err);
+        }
+    }
 </script>
 </body>
 </html>
