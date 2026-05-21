@@ -83,6 +83,6 @@ Once the pipeline script completes and prints the success message, the applicati
 3. You will be immediately intercepted by Spring Security and redirected to the Microsoft Entra ID login portal to
    authenticate.
 4. A valid login and password has been provided along with the secrets to the professor's email.
-5. The website currently displays weather data about a location searched by a user using the search bar, the search bar currently only accepts single strings when searching for a location (although, cities like Los Angeles and San Diego do work), searching for Bothell, Washington or PyongYang, North Korea will result in error
+5. The website currently displays weather data about a location searched by a user using the search bar, the search bar currently only accepts single strings when searching for a location (although, cities like Los Angeles and San Diego do work), searching for Bothell, Washington or PyongYang, North Korea will result in error.
 6. The map feature shows the location of the searched location and the corresponding data appears via a window placed on a pin to the location. If the user clicks on the map to place a pin, it will not show weather data of any location, only coordinates of the placed pin.
 
