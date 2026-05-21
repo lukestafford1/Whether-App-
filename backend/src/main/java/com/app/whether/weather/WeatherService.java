@@ -90,7 +90,7 @@ public class WeatherService {
 	}
 
 	private String getWindDirection(int degrees) {
-		String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+		String[] directions = {"North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest"};
 		return directions[(int) Math.round(((double) degrees % 360) / 45) % 8];
 	}
 }
