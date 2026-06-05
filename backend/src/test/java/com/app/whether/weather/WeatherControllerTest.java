@@ -51,35 +51,32 @@ class WeatherControllerTest {
 
 	@Test
 	void whenGetCurrentWeather_thenReturnFullFrontendPayload() throws Exception {
-		String testCity = "London";
+		String testLocation = "London, UK";
 
 		WeatherDto mockResponse = new WeatherDto(
-				"UK", "LND", testCity, 12.0, 10.0, "Cloudy", 78, 15.0, "NW", 3, "06:45", "19:30", 1015, 8
+				"UK", "LND", testLocation, 12.0, 10.0, "Cloudy", 78, 15.0, "NW", 3, "06:45", "19:30", 1015, 8
 		);
 
-		when(weatherService.getWeather(testCity)).thenReturn(mockResponse);
+		when(weatherService.getWeather(testLocation)).thenReturn(mockResponse);
 
 		mockMvc.perform(get("/api/weather/current")
-						.param("city", testCity)
+						.param("location", testLocation)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
 
 	@Test
-	void whenCityIsEmpty_thenReturnFallbackResponse() {
-		String emptyCity = "";
+	void whenLocationIsEmpty_thenReturnFallbackResponse() {
+		String emptyLocation = "";
 		WeatherDto fallbackResponse = new WeatherDto(
-				"Unknown", "", emptyCity, 0.0, 0.0, "Error fetching/parsing data", 0, 0.0, "N", 0, "00:00", "00:00", 0, 0
+				"Unknown", "", emptyLocation, 0.0, 0.0, "Error fetching/parsing data", 0, 0.0, "N", 0, "00:00", "00:00", 0, 0
 		);
 
-		// 1. Mock the service
 		when(weatherService.getWeather(Mockito.any())).thenReturn(fallbackResponse);
 
-		// 2. Call the controller directly like a standard Java method
-		ResponseEntity<WeatherDto> response = controller.getCurrentWeather(emptyCity, null);
+		ResponseEntity<WeatherDto> response = controller.getCurrentWeather(emptyLocation, null);
 
-		// 3. Assert the exact Java object values
 		assertNotNull(response.getBody());
 		assertEquals("Unknown", response.getBody().country());
 		assertEquals("Error fetching/parsing data", response.getBody().desc());
