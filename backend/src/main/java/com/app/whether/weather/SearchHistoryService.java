@@ -17,13 +17,13 @@ public class SearchHistoryService {
 	}
 
 	@Transactional
-	public void logUserSearch(String email, String name, String city) {
+	public void logUserSearch(String email, String name, String location) {
 		AppUser user = userRepository.findByEmail(email)
 				.orElseGet(() -> userRepository.save(new AppUser(email, name)));
 
-		SearchHistory existingSearch = historyRepository.findByUserAndCitySearchedIgnoreCase(user, city);
+		SearchHistory existingSearch = historyRepository.findByUserAndCitySearchedIgnoreCase(user, location);
 		if (existingSearch == null) {
-			historyRepository.save(new SearchHistory(user, city));
+			historyRepository.save(new SearchHistory(user, location));
 		}
 	}
 
