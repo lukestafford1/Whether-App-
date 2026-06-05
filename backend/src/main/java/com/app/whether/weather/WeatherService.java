@@ -7,6 +7,9 @@ import org.springframework.web.client.RestClient;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class WeatherService {
 
@@ -19,10 +22,12 @@ public class WeatherService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public WeatherDto getWeather(String city) {
+	public WeatherDto getWeather(String location) {
 		try {
-			// STEP 1: Geocode the city
-			String geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1&format=json";
+			// STEP 1: URL Encode the location to handle spaces and commas safely
+			String encodedLocation = URLEncoder.encode(location, StandardCharsets.UTF_8);
+			String geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodedLocation + "&count=1&format=json";
+
 			String geoJson = restClient.get()
 					.uri(geoUrl)
 					.retrieve()
@@ -31,15 +36,15 @@ public class WeatherService {
 			JsonNode geoRoot = objectMapper.readTree(geoJson);
 
 			if (!geoRoot.has("results") || geoRoot.get("results").isEmpty()) {
-				throw new RuntimeException("City not found");
+				throw new RuntimeException("Location not found");
 			}
 
-			JsonNode location = geoRoot.get("results").get(0);
-			double lat = location.get("latitude").asDouble();
-			double lon = location.get("longitude").asDouble();
-			String country = location.has("country") ? location.get("country").asText() : "";
-			String state = location.has("admin1") ? location.get("admin1").asText() : "";
-			String resolvedCity = location.get("name").asText();
+			JsonNode locationData = geoRoot.get("results").get(0);
+			double lat = locationData.get("latitude").asDouble();
+			double lon = locationData.get("longitude").asDouble();
+			String country = locationData.has("country") ? locationData.get("country").asText() : "";
+			String state = locationData.has("admin1") ? locationData.get("admin1").asText() : "";
+			String resolvedCity = locationData.get("name").asText();
 
 			// STEP 2: Fetch weather
 			String weatherUrl = String.format(
@@ -57,9 +62,7 @@ public class WeatherService {
 			JsonNode daily = weatherRoot.get("daily");
 
 			return new WeatherDto(
-					country,
-					state,
-					resolvedCity,
+					country, state, resolvedCity,
 					current.get("temperature_2m").asDouble(),
 					current.get("apparent_temperature").asDouble(),
 					parseWeatherCode(current.get("weather_code").asInt()),
@@ -69,14 +72,13 @@ public class WeatherService {
 					(int) Math.round(daily.get("uv_index_max").get(0).asDouble()),
 					daily.get("sunrise").get(0).asText().split("T")[1],
 					daily.get("sunset").get(0).asText().split("T")[1],
-					current.get("surface_pressure").asInt(),
-					10
+					current.get("surface_pressure").asInt(), 10
 			);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
-			return new WeatherDto("Unknown", "", city, 0.0, 0.0, "API error: " + e.getStatusCode(), 0, 0.0, "N", 0, "00:00", "00:00", 0, 0);
+			return new WeatherDto("Unknown", "", location, 0.0, 0.0, "API error: " + e.getStatusCode(), 0, 0.0, "N", 0, "00:00", "00:00", 0, 0);
 		} catch (Exception e) {
-			return new WeatherDto("Unknown", "", city, 0.0, 0.0, "Error fetching/parsing data", 0, 0.0, "N", 0, "00:00", "00:00", 0, 0);
+			return new WeatherDto("Unknown", "", location, 0.0, 0.0, "Error fetching/parsing data", 0, 0.0, "N", 0, "00:00", "00:00", 0, 0);
 		}
 	}
 
