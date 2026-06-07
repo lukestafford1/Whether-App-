@@ -229,7 +229,6 @@
             margin-right: 10px;
             transition: all 0.3s;
 
-            anchor-name: --input-anchor;
         }
 
         .search-panel input:focus {
@@ -658,46 +657,6 @@
             color: #f0f0f0;
         }
 
-        /* Search history */
-        #history {
-            margin: 0;
-            border: 2px solid #b7eef5;
-            background: white;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            text-align: left;
-
-            position-anchor: --input-anchor;
-            top: anchor(bottom);
-            left: anchor(left);
-
-            width: anchor-size(width);
-        }
-
-        [popover] {
-            margin: 0;
-            padding: 0;
-            border: none;
-            background: transparent;
-        }
-
-        #history li {
-            padding: 3px 20px;
-        }
-
-        #history li:hover {
-            background: #b7eef5;
-        }
-
-        body.dark-mode #history {
-            background: #4a4a5e;
-            color: #eee;
-        }
-
-        body.dark-mode #history li:hover {
-            background: #3a3a4e;
-        }
-
         .search-panel {
             position: relative;
         }
@@ -820,12 +779,12 @@
                 type="text"
                 id="cityInput"
                 placeholder="Enter city name (e.g., London, Seattle, Dubai)"
+                list="historyTesting"
                 autocomplete="off"
+                
         />
+        <datalist id="historyTesting"></datalist>
         <button id="searchBtn" onclick="getWeather()">Get Weather</button>
-        <div id="history" popover="manual">
-            <ul></ul>
-        </div>
     </div>
 
     <!-- Scrollable Panels Container -->
@@ -1202,25 +1161,8 @@
     const input = document.getElementById("cityInput");
     const pop = document.getElementById("history");
 
-    // Handling popover behavior
-    input.addEventListener("focus", () => pop.showPopover());
-    input.addEventListener("blur", () => {
-        setTimeout(() => pop.hidePopover(), 150);
-    });
-
-    // Replacing the click handlers after each new list is made
-    function fixClickHandlers() {
-        document.querySelectorAll("#history li").forEach((li) => {
-            li.addEventListener("click", () => {
-                input.value = li.textContent;
-                pop.hidePopover();
-            });
-        });
-    }
 
     let searchHistory = [];
-    const list = document.querySelector("#history ul");
-
 
     async function fetchHistory() {
         try {
@@ -1231,25 +1173,45 @@
             }
             if (res.ok) {
                 searchHistory = await res.json();
-                visibleHistoryFix();
             }
         } catch (err) {
             console.error("Failed to load DB history", err);
         }
     }
 
-    // Updates the shown search history
-    function visibleHistoryFix() {
-        list.innerHTML = "";
+    
+    document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('cityInput');
+  
+  // Initial list
+  populateDatalist(searchHistory, 'historyTesting');
+ 
+  // Filter suggestions as the user types
+  input.addEventListener('input', () => {
+    const userSearch = input.value.toLowerCase();
+    const filteredCities = searchHistory.filter(cityName => 
+      cityName.toLowerCase().includes(userSearch)
+    );
+    populateDatalist(filteredCities, 'historyTesting');
+  });
+});
 
-        // Take top 5 recent searches
-        searchHistory.slice(0, 5).forEach((item) => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            list.appendChild(li);
-        });
-        fixClickHandlers();
+function populateDatalist(array, datalistId) {
+  const datalist = document.getElementById(datalistId);
+  // Clear existing options
+  datalist.innerHTML = '';
+ 
+  // Loop through the array and create options
+  array.forEach(item => {
+    const option = document.createElement('option');
+    // Value stored in the dropdown
+    option.value = item;
+    // Text displayed to the user
+    option.textContent = item;
+    datalist.appendChild(option);
+  });
     }
+
 
 
     /* ---------- MAP PANEL ---------- */
