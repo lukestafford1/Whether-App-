@@ -1,13 +1,11 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>"Whether" App | Real-time Weather Dashboard</title>
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -30,7 +28,7 @@
             --btn-bg: #ff6b6b;
             --btn-hover: #ff5252;
             transition: background 0.3s ease,
-            color 0.3s ease;
+                color 0.3s ease;
         }
 
         /* Dark Mode Variables */
@@ -51,11 +49,9 @@
 
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(
-                    180deg,
+            background: linear-gradient(180deg,
                     var(--bg-gradient-start) 0%,
-                    var(--bg-gradient-end) 100%
-            );
+                    var(--bg-gradient-end) 100%);
             min-height: 100vh;
             padding: 40px 20px;
             transition: background 0.3s ease;
@@ -74,7 +70,8 @@
 
         /* PR2: Options Menu Button */
         .options-menu-container {
-            position: absolute; /* fixed -> absolute */
+            position: absolute;
+            /* fixed -> absolute */
             top: 20px;
             right: 20px;
             z-index: 1000;
@@ -168,9 +165,11 @@
             0% {
                 transform: translateY(-5px);
             }
+
             50% {
                 transform: translateY(-12px);
             }
+
             100% {
                 transform: translateY(-5px);
             }
@@ -246,7 +245,7 @@
             border-radius: 50px;
             cursor: pointer;
             transition: transform 0.2s,
-            box-shadow 0.2s;
+                box-shadow 0.2s;
         }
 
         .search-panel button:hover:not(:disabled) {
@@ -315,7 +314,7 @@
             padding: 25px;
             box-shadow: 0 10px 30px var(--shadow-color);
             transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1),
-            box-shadow 0.3s ease;
+                box-shadow 0.3s ease;
             flex-shrink: 0;
             cursor: pointer;
             backdrop-filter: blur(2px);
@@ -333,71 +332,57 @@
         /* Panel size and color variations */
         .panel-small {
             width: 250px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(79, 172, 254, 0.9) 0%,
-                    rgba(0, 242, 254, 0.9) 100%
-            );
+                    rgba(0, 242, 254, 0.9) 100%);
             color: white;
         }
 
         .panel-medium {
             width: 320px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(67, 233, 123, 0.85) 0%,
-                    rgba(56, 249, 215, 0.85) 100%
-            );
+                    rgba(56, 249, 215, 0.85) 100%);
             color: white;
         }
 
         .panel-large {
             width: 400px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(102, 126, 234, 0.85) 0%,
-                    rgba(118, 75, 162, 0.85) 100%
-            );
+                    rgba(118, 75, 162, 0.85) 100%);
             color: white;
         }
 
         .panel-dark {
             width: 280px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(44, 62, 80, 0.85) 0%,
-                    rgba(52, 152, 219, 0.85) 100%
-            );
+                    rgba(52, 152, 219, 0.85) 100%);
             color: white;
         }
 
         .panel-warm {
             width: 300px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(250, 112, 154, 0.85) 0%,
-                    rgba(254, 225, 64, 0.85) 100%
-            );
+                    rgba(254, 225, 64, 0.85) 100%);
             color: white;
         }
 
         .panel-cool {
             width: 350px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(168, 237, 234, 0.9) 0%,
-                    rgba(254, 214, 227, 0.9) 100%
-            );
+                    rgba(254, 214, 227, 0.9) 100%);
             color: #333;
         }
 
         .panel-air {
             width: 260px;
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(147, 197, 253, 0.9) 0%,
-                    rgba(59, 130, 246, 0.9) 100%
-            );
+                    rgba(59, 130, 246, 0.9) 100%);
             color: white;
         }
 
@@ -544,7 +529,7 @@
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.2s,
-            opacity 0.2s ease;
+                opacity 0.2s ease;
         }
 
         .about-page.active {
@@ -662,6 +647,7 @@
         }
 
         @media (max-width: 768px) {
+
             .panel-small,
             .panel-medium,
             .panel-large,
@@ -692,6 +678,7 @@
 
         /* Print styles */
         @media print {
+
             .options-menu-container,
             .scroll-buttons,
             .search-panel button,
@@ -711,11 +698,9 @@
         }
 
         .map-panel-wrapper {
-            background: linear-gradient(
-                    135deg,
+            background: linear-gradient(135deg,
                     rgba(102, 126, 234, 0.85) 0%,
-                    rgba(118, 75, 162, 0.85) 100%
-            );
+                    rgba(118, 75, 162, 0.85) 100%);
             border-radius: 20px;
             padding: 20px;
             margin: 10px 0 30px 0;
@@ -751,495 +736,482 @@
 </head>
 
 <body>
-<!-- Options Menu -->
-<div class="options-menu-container">
-    <button class="options-btn" id="optionsBtn" onclick="toggleOptionsMenu()">
-        ⚙️ <span>Options</span>
-    </button>
-    <div class="options-dropdown" id="optionsDropdown">
-        <button id="darkModeToggleBtn" onclick="toggleDarkMode()">
-            <span>🌙 Dark Mode</span>
+    <!-- Options Menu -->
+    <div class="options-menu-container">
+        <button class="options-btn" id="optionsBtn" onclick="toggleOptionsMenu()">
+            ⚙️ <span>Options</span>
         </button>
-        <hr/>
-        <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
-        <button id="aboutPageBtn"><span>📖 About "Whether" App</span></button>
-        <button onclick="scrollToBottom()">
-            <span>⬇️ Scroll to Info</span>
-        </button>
-    </div>
-</div>
-
-<div class="dashboard">
-    <h1>"Whether" App</h1>
-
-
-    <!-- Search Panel -->
-    <div class="search-panel">
-        <input
-                type="text"
-                id="cityInput"
-                placeholder="Enter city name (e.g., London, Seattle, Dubai)"
-                list="historyTesting"
-                autocomplete="off"
-                
-        />
-        <datalist id="historyTesting"></datalist>
-        <button id="searchBtn" onclick="getWeather()">Get Weather</button>
-    </div>
-
-    <!-- Scrollable Panels Container -->
-    <div class="panels-container" id="panelsContainer">
-        <div class="panel panel-small" data-panel="temp">
-            <h3> Current Temp</h3>
-            <div class="temp">--°C</div>
-            <div class="extra-info">Feels like: --°C</div>
-        </div>
-        <div class="panel panel-medium" data-panel="humidity">
-            <h3> Humidity</h3>
-            <div class="temp">--%</div>
-            <!--<div class="description">Moisture Level</div> -->
-            <!---<div class="extra-info">Comfort: --</div> -->
-        </div>
-        <div class="panel panel-large" data-panel="wind">
-            <h3> Wind Speed</h3>
-            <div class="temp">-- km/h</div>
-            <div class="description">Direction: --</div>
-        </div>
-        <div class="panel panel-cool" data-panel="forecast">
-            <h3> 3-Day Forecast</h3>
-            <div class="temp">--</div>
-            <div class="description">Upcoming weather</div>
-            <div class="extra-info">Extended forecast coming soon</div>
-        </div>
-        <div class="panel panel-dark" data-panel="uv">
-            <h3> UV Index</h3>
-            <div class="temp">--</div>
-            <div class="description">Sun Intensity</div>
-            <div class="extra-info">Protection: --</div>
-        </div>
-        <div class="panel panel-warm" data-panel="sun">
-            <h3> Sunrise/Sunset</h3>
-            <div class="temp">--:--</div>
-            <div class="description">--:--</div>
-            <div class="extra-info">Day length: --h</div>
-        </div>
-        <div class="panel panel-small" data-panel="pressure">
-            <h3> Pressure</h3>
-            <div class="temp">-- hPa</div>
-        </div>
-        <div class="panel panel-medium" data-panel="visibility">
-            <h3> Visibility</h3>
-            <div class="temp">-- km</div>
-            <div class="description">Clear conditions</div>
-            <div class="extra-info">Standard: 10+ km</div>
-        </div>
-    </div>
-
-    <!-- Scroll Buttons -->
-    <div class="scroll-buttons">
-        <button class="scroll-btn" onclick="scrollPanels('left')">
-            ◀ Scroll Left
-        </button>
-        <button class="scroll-btn" onclick="scrollPanels('right')">
-            Scroll Right ▶
-        </button>
-    </div>
-
-    <!-- Map Panel -->
-    <div class="map-panel-wrapper">
-        <h3>🗺️ Map Search</h3>
-        <div id="leafletMap"></div>
-        <div class="map-hint">💡 Click anywhere on the map to drop a pin</div>
-    </div>
-
-    <!-- Weather Result Display -->
-    <div id="weatherResult" class="weather-result" style="display: none">
-        <h2 id="cityName"></h2>
-        <div class="weather-icon" id="weatherIcon">🌤️</div>
-        <div class="temp" id="temperature"></div>
-        <div id="description"></div>
-        <div id="humidity"></div>
-    </div>
-
-    <div
-            id="errorMessage"
-            style="color: #ff6b6b; margin-top: 20px; text-align: center"
-    ></div>
-
-    <!-- PR2: Bottom Panel (simplified, no duplicate about paragraph, only a teaser) -->
-    <div class="bottom-panel">
-        <h3>Weather Dashboard</h3>
-        <p>
-            Real-time insights with detailed weather metrics.
-        </p>
-        <div class="footer-links">
-            <button id="bottomAboutBtn">📖 About "Whether" App</button>
-            <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
-                🌙 Dark Mode
+        <div class="options-dropdown" id="optionsDropdown">
+            <button id="darkModeToggleBtn" onclick="toggleDarkMode()">
+                <span>🌙 Dark Mode</span>
             </button>
-            <a
-                    href="#"
-                    onclick="
+            <hr />
+            <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
+            <button id="aboutPageBtn"><span>📖 About "Whether" App</span></button>
+            <button onclick="scrollToBottom()">
+                <span>⬇️ Scroll to Info</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <h1>"Whether" App</h1>
+
+
+        <!-- Search Panel -->
+        <div class="search-panel">
+            <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, Seattle, Dubai)"
+                list="historyTesting" autocomplete="off" />
+            <datalist id="historyTesting"></datalist>
+            <button id="searchBtn" onclick="getWeather()">Get Weather</button>
+        </div>
+
+        <!-- Scrollable Panels Container -->
+        <div class="panels-container" id="panelsContainer">
+            <div class="panel panel-small" data-panel="temp">
+                <h3> Current Temp</h3>
+                <div class="temp">--°C</div>
+                <div class="extra-info">Feels like: --°C</div>
+            </div>
+            <div class="panel panel-medium" data-panel="humidity">
+                <h3> Humidity</h3>
+                <div class="temp">--%</div>
+                <!--<div class="description">Moisture Level</div> -->
+                <!---<div class="extra-info">Comfort: --</div> -->
+            </div>
+            <div class="panel panel-large" data-panel="wind">
+                <h3> Wind Speed</h3>
+                <div class="temp">-- km/h</div>
+                <div class="description">Direction: --</div>
+            </div>
+            <div class="panel panel-cool" data-panel="forecast">
+                <h3> 3-Day Forecast</h3>
+                <div class="temp">--</div>
+                <div class="description">Upcoming weather</div>
+                <div class="extra-info">Extended forecast coming soon</div>
+            </div>
+            <div class="panel panel-dark" data-panel="uv">
+                <h3> UV Index</h3>
+                <div class="temp">--</div>
+                <div class="description">Sun Intensity</div>
+                <div class="extra-info">Protection: --</div>
+            </div>
+            <div class="panel panel-warm" data-panel="sun">
+                <h3> Sunrise/Sunset</h3>
+                <div class="temp">--:--</div>
+                <div class="description">--:--</div>
+                <div class="extra-info">Day length: --h</div>
+            </div>
+            <div class="panel panel-small" data-panel="pressure">
+                <h3> Pressure</h3>
+                <div class="temp">-- hPa</div>
+            </div>
+            <div class="panel panel-medium" data-panel="visibility">
+                <h3> Visibility</h3>
+                <div class="temp">-- km</div>
+                <div class="description">Clear conditions</div>
+                <div class="extra-info">Standard: 10+ km</div>
+            </div>
+        </div>
+
+        <!-- Scroll Buttons -->
+        <div class="scroll-buttons">
+            <button class="scroll-btn" onclick="scrollPanels('left')">
+                ◀ Scroll Left
+            </button>
+            <button class="scroll-btn" onclick="scrollPanels('right')">
+                Scroll Right ▶
+            </button>
+        </div>
+
+        <!-- Map Panel -->
+        <div class="map-panel-wrapper">
+            <h3>🗺️ Map Search</h3>
+            <div id="leafletMap"></div>
+            <div class="map-hint">💡 Click anywhere on the map to drop a pin</div>
+        </div>
+
+        <!-- Weather Result Display -->
+        <div id="weatherResult" class="weather-result" style="display: none">
+            <h2 id="cityName"></h2>
+            <div class="weather-icon" id="weatherIcon">🌤️</div>
+            <div class="temp" id="temperature"></div>
+            <div id="description"></div>
+            <div id="humidity"></div>
+        </div>
+
+        <div id="errorMessage" style="color: #ff6b6b; margin-top: 20px; text-align: center"></div>
+
+        <!-- PR2: Bottom Panel (simplified, no duplicate about paragraph, only a teaser) -->
+        <div class="bottom-panel">
+            <h3>Weather Dashboard</h3>
+            <p>
+                Real-time insights with detailed weather metrics.
+            </p>
+            <div class="footer-links">
+                <button id="bottomAboutBtn">📖 About "Whether" App</button>
+                <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
+                    🌙 Dark Mode
+                </button>
+                <a href="#" onclick="
               scrollToTop();
               return false;
-            "
-            >⬆️ Back to Top</a
-            >
-        </div>
-        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
-            Created by the "Whether" App Team | Version 1.0
-        </p>
-    </div>
-</div>
-
-<!-- ========== SEPARATE ABOUT PAGE (Full overlay, clean design) ========== -->
-<div id="aboutOverlay" class="about-page">
-    <div class="about-card">
-        <button class="close-about-btn" id="closeAboutOverlayBtn">
-            &times;
-        </button>
-        <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
-        <div class="about-description">
-            <p>
-                Your go-to destination for accurate, real-time weather information
-                from around the globe. Whether you're planning a trip, checking
-                local conditions, or just curious about the weather, our app
-                provides comprehensive data in a clear and easy-to-read format.
-            </p>
-        </div>
-        <div class="coverage-badge">
-            🌍 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
-        </div>
-        <div class="feature-list">
-            <span>✨ Interactive panels</span>
-            <span>🌙 Dark mode</span>
-            <span>📜 Search history</span>
-            <span>🖱️ Scrollable cards</span>
-            <span>📱 Fully responsive</span>
-        </div>
-        <div class="about-footer">
-            <p>
-                Powered by Open-Meteo API
-            </p>
-            <p style="margin-top: 8px">
-                Brought to you by the "Whether" App Team!
+            ">⬆️ Back to Top</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
+                Created by the "Whether" App Team | Version 1.0
             </p>
         </div>
     </div>
-</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-    /* ---------- DARK MODE & LOCALSTORAGE ---------- */
-    function loadPreferences() {
-        const darkMode = localStorage.getItem("darkMode");
-        if (darkMode === "enabled") document.body.classList.add("dark-mode");
-        const lastCity = localStorage.getItem("lastCity");
-        if (lastCity) document.getElementById("cityInput").value = lastCity;
+    <!-- ========== SEPARATE ABOUT PAGE (Full overlay, clean design) ========== -->
+    <div id="aboutOverlay" class="about-page">
+        <div class="about-card">
+            <button class="close-about-btn" id="closeAboutOverlayBtn">
+                &times;
+            </button>
+            <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
+            <div class="about-description">
+                <p>
+                    Your go-to destination for accurate, real-time weather information
+                    from around the globe. Whether you're planning a trip, checking
+                    local conditions, or just curious about the weather, our app
+                    provides comprehensive data in a clear and easy-to-read format.
+                </p>
+            </div>
+            <div class="coverage-badge">
+                🌍 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
+            </div>
+            <div class="feature-list">
+                <span>✨ Interactive panels</span>
+                <span>🌙 Dark mode</span>
+                <span>📜 Search history</span>
+                <span>🖱️ Scrollable cards</span>
+                <span>📱 Fully responsive</span>
+            </div>
+            <div class="about-footer">
+                <p>
+                    Powered by Open-Meteo API
+                </p>
+                <p style="margin-top: 8px">
+                    Brought to you by the "Whether" App Team!
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-        // CHANGE: Set correct button text on page load
-        const isDark = document.body.classList.contains("dark-mode");
-        const topBtn = document.getElementById("darkModeToggleBtn");
-        const bottomBtn = document.getElementById("bottomDarkModeToggleBtn");
+    <script>
+        /* ---------- DARK MODE & LOCALSTORAGE ---------- */
+        function loadPreferences() {
+            const darkMode = localStorage.getItem("darkMode");
+            if (darkMode === "enabled") document.body.classList.add("dark-mode");
+            const lastCity = localStorage.getItem("lastCity");
+            if (lastCity) document.getElementById("cityInput").value = lastCity;
 
-        if (topBtn) {
-            topBtn.innerHTML = isDark
-                ? "<span>☀️ Light Mode</span>"
-                : "<span>🌙 Dark Mode</span>";
+            // CHANGE: Set correct button text on page load
+            const isDark = document.body.classList.contains("dark-mode");
+            const topBtn = document.getElementById("darkModeToggleBtn");
+            const bottomBtn = document.getElementById("bottomDarkModeToggleBtn");
+
+            if (topBtn) {
+                topBtn.innerHTML = isDark
+                    ? "<span>☀️ Light Mode</span>"
+                    : "<span>🌙 Dark Mode</span>";
+            }
+            if (bottomBtn) {
+                bottomBtn.innerHTML = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+            }
         }
-        if (bottomBtn) {
-            bottomBtn.innerHTML = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.contains("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+
+            // CHANGE: Update button text to reflect current mode
+            const isDark = document.body.classList.contains("dark-mode");
+            const topBtn = document.getElementById("darkModeToggleBtn");
+            const bottomBtn = document.getElementById("bottomDarkModeToggleBtn");
+
+            if (topBtn) {
+                topBtn.innerHTML = isDark
+                    ? "<span>☀️ Light Mode</span>"
+                    : "<span>🌙 Dark Mode</span>";
+            }
+            if (bottomBtn) {
+                bottomBtn.innerHTML = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+            }
         }
-    }
 
-    function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-        const isDarkMode = document.body.classList.contains("dark-mode");
-        localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
-
-        // CHANGE: Update button text to reflect current mode
-        const isDark = document.body.classList.contains("dark-mode");
-        const topBtn = document.getElementById("darkModeToggleBtn");
-        const bottomBtn = document.getElementById("bottomDarkModeToggleBtn");
-
-        if (topBtn) {
-            topBtn.innerHTML = isDark
-                ? "<span>☀️ Light Mode</span>"
-                : "<span>🌙 Dark Mode</span>";
+        /* Options menu dropdown */
+        function toggleOptionsMenu() {
+            const dropdown = document.getElementById("optionsDropdown");
+            dropdown.classList.toggle("show");
         }
-        if (bottomBtn) {
-            bottomBtn.innerHTML = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-        }
-    }
 
-    /* Options menu dropdown */
-    function toggleOptionsMenu() {
-        const dropdown = document.getElementById("optionsDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    document.addEventListener("click", function (event) {
-        const container = document.querySelector(".options-menu-container");
-        const dropdown = document.getElementById("optionsDropdown");
-        if (container && !container.contains(event.target))
-            dropdown.classList.remove("show");
-    });
-
-    /* About Page Overlay (separate page) */
-    function showAboutPage() {
-        const overlay = document.getElementById("aboutOverlay");
-        overlay.classList.add("active");
-        document.body.style.overflow = "hidden";
-    }
-
-    function closeAboutPage() {
-        const overlay = document.getElementById("aboutOverlay");
-        overlay.classList.remove("active");
-        document.body.style.overflow = "";
-    }
-
-    // open via options button + bottom footer button
-    document.getElementById("aboutPageBtn").addEventListener("click", (e) => {
-        e.preventDefault();
-        showAboutPage();
-        toggleOptionsMenu(); // close dropdown after click
-    });
-    document
-        .getElementById("bottomAboutBtn")
-        .addEventListener("click", () => showAboutPage());
-    document
-        .getElementById("closeAboutOverlayBtn")
-        .addEventListener("click", closeAboutPage);
-    // close on overlay background click
-    document.getElementById("aboutOverlay").addEventListener("click", (e) => {
-        if (e.target === document.getElementById("aboutOverlay"))
-            closeAboutPage();
-    });
-    // ESC key closes the about page
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            closeAboutPage();
-            document.getElementById("optionsDropdown").classList.remove("show");
-        }
-    });
-
-    function scrollToBottom() {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
+        document.addEventListener("click", function (event) {
+            const container = document.querySelector(".options-menu-container");
+            const dropdown = document.getElementById("optionsDropdown");
+            if (container && !container.contains(event.target))
+                dropdown.classList.remove("show");
         });
-    }
 
-    function scrollToTop() {
-        window.scrollTo({top: 0, behavior: "smooth"});
-    }
-
-    function getWeatherIcon(desc) {
-        const d = desc.toLowerCase();
-        if (d.includes("sun") || d.includes("clear") || d.includes("hot"))
-            return "☀️";
-        if (d.includes("rain") || d.includes("drizzle")) return "🌧️";
-        if (d.includes("cloud")) return "☁️";
-        if (d.includes("thunder")) return "⛈️";
-        return "🌤️";
-    }
-
-    let isLoading = false;
-
-    async function getWeather() {
-        if (isLoading) return;
-
-        const city = document.getElementById("cityInput").value.trim();
-
-        if (!city) {
-            showError("Please enter a city name!");
-            return;
+        /* About Page Overlay (separate page) */
+        function showAboutPage() {
+            const overlay = document.getElementById("aboutOverlay");
+            overlay.classList.add("active");
+            document.body.style.overflow = "hidden";
         }
 
-        localStorage.setItem("lastCity", city);
-        isLoading = true;
-        const btn = document.getElementById("searchBtn");
-        btn.classList.add("loading");
-        btn.disabled = true;
-
-        try {
-            // Hit your live Spring Boot Backend
-            const response = await fetch(`/api/weather/current?city=${encodeURIComponent(city)}`);
-
-            // If Entra ID intercepted the call (session expired), force a redirect to login
-            if (response.redirected) {
-                window.location.href = response.url;
-                return;
-            }
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch from API");
-            }
-
-            const weather = await response.json();
-            lastWeatherData = weather;
-            document.getElementById("errorMessage").innerHTML = "";
-
-            // Display the live data
-            displayWeather(city, weather);
-            updatePanels(weather, city);
-
-            // Refresh the dropdown history from the DB since we just searched!
-            await fetchHistory();
-            await updateMapLocation(city);
-
-        } catch (err) {
-            showError("Server error or city not found. Is the backend running?");
-            console.error(err);
-        } finally {
-            btn.classList.remove("loading");
-            btn.disabled = false;
-            isLoading = false;
+        function closeAboutPage() {
+            const overlay = document.getElementById("aboutOverlay");
+            overlay.classList.remove("active");
+            document.body.style.overflow = "";
         }
-    }
 
-
-    function displayWeather(city, w) {
-        document.getElementById("cityName").textContent = city.toUpperCase();
-        document.getElementById("weatherIcon").textContent = getWeatherIcon(
-            w.desc
-        );
-        document.getElementById("temperature").textContent =
-            `${w.temp}°C`;
-        document.getElementById("description").textContent = w.desc;
-        document.getElementById("humidity").textContent =
-            `Humidity: ${w.humidity}%`;
-        document.getElementById("weatherResult").style.display = "block";
-    }
-
-    function updatePanels(w, city) {
-        const p = document.querySelectorAll(".panel");
-        p[0].querySelector(".temp").textContent = 
-            `${w.temp}°C`;
-        p[0].querySelector(".extra-info").textContent =
-            `Feels like: ${w.feelsLike}°C`;
-        p[1].querySelector(".temp").textContent = 
-            `${w.humidity}%`;
-        /*p[1].querySelector(".extra-info").textContent =
-            `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`; */
-        p[2].querySelector(".temp").textContent = 
-            `${w.wind} km/h`;
-        p[2].querySelector(".description").textContent =
-            `Direction: ${w.windDir}`;
-        p[3].querySelector(".temp").innerHTML =
-            `${w.desc} ${getWeatherIcon(w.desc)}`;
-        p[4].querySelector(".temp").textContent = w.uv;
-        p[4].querySelector(".extra-info").textContent =
-            w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate"; 
-        p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
-        p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
-        let day =
-            parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
-        if (day < 0) day += 12;
-        p[5].querySelector(".extra-info").textContent = `Day length: ${day}h`;
-        p[6].querySelector(".temp").textContent = `${w.pressure} hPa`;
-        p[7].querySelector(".temp").textContent = `${w.visibility} km`;
-        /*p[7].querySelector(".extra-info").textContent =
-            w.visibility >= 10 ? "Excellent" : "Good"; */
-    }
-
-    function showError(msg) {
-        document.getElementById("errorMessage").innerHTML = msg;
-        document.getElementById("weatherResult").style.display = "none";
-    }
-
-    function scrollPanels(dir) {
+        // open via options button + bottom footer button
+        document.getElementById("aboutPageBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            showAboutPage();
+            toggleOptionsMenu(); // close dropdown after click
+        });
         document
-            .getElementById("panelsContainer")
-            .scrollBy({left: dir === "left" ? -400 : 400, behavior: "smooth"});
-    }
+            .getElementById("bottomAboutBtn")
+            .addEventListener("click", () => showAboutPage());
+        document
+            .getElementById("closeAboutOverlayBtn")
+            .addEventListener("click", closeAboutPage);
+        // close on overlay background click
+        document.getElementById("aboutOverlay").addEventListener("click", (e) => {
+            if (e.target === document.getElementById("aboutOverlay"))
+                closeAboutPage();
+        });
+        // ESC key closes the about page
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeAboutPage();
+                document.getElementById("optionsDropdown").classList.remove("show");
+            }
+        });
 
-    document.getElementById("cityInput").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") getWeather();
-    });
+        function scrollToBottom() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+            });
+        }
 
-    const input = document.getElementById("cityInput");
-    const pop = document.getElementById("history");
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
 
+        function getWeatherIcon(desc) {
+            const d = desc.toLowerCase();
+            if (d.includes("sun") || d.includes("clear") || d.includes("hot"))
+                return "☀️";
+            if (d.includes("rain") || d.includes("drizzle")) return "🌧️";
+            if (d.includes("cloud")) return "☁️";
+            if (d.includes("thunder")) return "⛈️";
+            return "🌤️";
+        }
 
-    let searchHistory = [];
+        let isLoading = false;
 
-    async function fetchHistory() {
-        try {
-            const res = await fetch("/api/weather/history");
-            if (res.redirected) {
-                window.location.href = res.url;
+        async function getWeather() {
+            if (isLoading) return;
+
+            const city = document.getElementById("cityInput").value.trim();
+
+            if (!city) {
+                showError("Please enter a city name!");
                 return;
             }
-            if (res.ok) {
-                searchHistory = await res.json();
+
+            localStorage.setItem("lastCity", city);
+            isLoading = true;
+            const btn = document.getElementById("searchBtn");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                // Hit your live Spring Boot Backend
+                const response = await fetch(`/api/weather/current?city=${encodeURIComponent(city)}`);
+
+                // If Entra ID intercepted the call (session expired), force a redirect to login
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch from API");
+                }
+
+                const weather = await response.json();
+                lastWeatherData = weather;
+                document.getElementById("errorMessage").innerHTML = "";
+
+                // Display the live data
+                displayWeather(city, weather);
+                updatePanels(weather, city);
+
+                // Refresh the dropdown history from the DB since we just searched!
+                await fetchHistory();
+                await updateMapLocation(city);
+
+            } catch (err) {
+                showError("Server error or city not found. Is the backend running?");
+                console.error(err);
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+                isLoading = false;
             }
-        } catch (err) {
-            console.error("Failed to load DB history", err);
         }
-    }
-
-    
-    document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('cityInput');
-  
-  // Initial list
-  populateDatalist(searchHistory, 'historyTesting');
- 
-  // Filter suggestions as the user types
-  input.addEventListener('input', () => {
-    const userSearch = input.value.toLowerCase();
-    const filteredCities = searchHistory.filter(cityName => 
-      cityName.toLowerCase().includes(userSearch)
-    );
-    populateDatalist(filteredCities, 'historyTesting');
-  });
-});
-
-function populateDatalist(array, datalistId) {
-  const datalist = document.getElementById(datalistId);
-  // Clear existing options
-  datalist.innerHTML = '';
- 
-  // Loop through the array and create options
-  array.forEach(item => {
-    const option = document.createElement('option');
-    // Value stored in the dropdown
-    option.value = item;
-    // Text displayed to the user
-    option.textContent = item;
-    datalist.appendChild(option);
-  });
-    }
 
 
+        function displayWeather(city, w) {
+            document.getElementById("cityName").textContent = city.toUpperCase();
+            document.getElementById("weatherIcon").textContent = getWeatherIcon(
+                w.desc
+            );
+            document.getElementById("temperature").textContent =
+                `${w.temp}°C`;
+            document.getElementById("description").textContent = w.desc;
+            document.getElementById("humidity").textContent =
+                `Humidity: ${w.humidity}%`;
+            document.getElementById("weatherResult").style.display = "block";
+        }
 
-    /* ---------- MAP PANEL ---------- */
-    let leafletMap = null;
-    let mapMarker = null;
-    let lastWeatherData = null;
+        function updatePanels(w, city) {
+            const p = document.querySelectorAll(".panel");
+            p[0].querySelector(".temp").textContent =
+                `${w.temp}°C`;
+            p[0].querySelector(".extra-info").textContent =
+                `Feels like: ${w.feelsLike}°C`;
+            p[1].querySelector(".temp").textContent =
+                `${w.humidity}%`;
+            /*p[1].querySelector(".extra-info").textContent =
+                `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`; */
+            p[2].querySelector(".temp").textContent =
+                `${w.wind} km/h`;
+            p[2].querySelector(".description").textContent =
+                `Direction: ${w.windDir}`;
+            p[3].querySelector(".temp").innerHTML =
+                `${w.desc} ${getWeatherIcon(w.desc)}`;
+            p[4].querySelector(".temp").textContent = w.uv;
+            p[4].querySelector(".extra-info").textContent =
+                w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+            p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
+            p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
+            let day =
+                parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
+            if (day < 0) day += 12;
+            p[5].querySelector(".extra-info").textContent = `Day length: ${day}h`;
+            p[6].querySelector(".temp").textContent = `${w.pressure} hPa`;
+            p[7].querySelector(".temp").textContent = `${w.visibility} km`;
+            /*p[7].querySelector(".extra-info").textContent =
+                w.visibility >= 10 ? "Excellent" : "Good"; */
+        }
 
-    function initLeafletMap() {
-        if (leafletMap) return;
-        leafletMap = L.map("leafletMap").setView([20, 0], 2);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "© OpenStreetMap contributors",
-        }).addTo(leafletMap);
+        function showError(msg) {
+            document.getElementById("errorMessage").innerHTML = msg;
+            document.getElementById("weatherResult").style.display = "none";
+        }
 
-        leafletMap.on("click", function (e) {
-            const {lat, lng} = e.latlng;
-            placeMapMarker(lat, lng, `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+        function scrollPanels(dir) {
+            document
+                .getElementById("panelsContainer")
+                .scrollBy({ left: dir === "left" ? -400 : 400, behavior: "smooth" });
+        }
+
+        document.getElementById("cityInput").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") getWeather();
         });
-    }
 
-    function placeMapMarker(lat, lng, label, weather = null) {
-        if (mapMarker) leafletMap.removeLayer(mapMarker);
+        const input = document.getElementById("cityInput");
+        const pop = document.getElementById("history");
 
-        let popupContent;
-        if (weather) {
-            const icon = getWeatherIcon(weather.desc);
-            const uvWarning = weather.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
-            popupContent = `
+
+        let searchHistory = [];
+
+        async function fetchHistory() {
+            try {
+                const res = await fetch("/api/weather/history");
+                if (res.redirected) {
+                    window.location.href = res.url;
+                    return;
+                }
+                if (res.ok) {
+                    searchHistory = await res.json();
+                }
+            } catch (err) {
+                console.error("Failed to load DB history", err);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('cityInput');
+
+            // Initial list
+            populateDatalist(searchHistory, 'historyTesting');
+
+            // Filter suggestions as the user types
+            input.addEventListener('input', () => {
+                const userSearch = input.value.toLowerCase();
+                const filteredCities = searchHistory.filter(cityName =>
+                    cityName.toLowerCase().includes(userSearch)
+                );
+                populateDatalist(filteredCities, 'historyTesting');
+            });
+        });
+
+        function populateDatalist(array, datalistId) {
+            const datalist = document.getElementById(datalistId);
+            // Clear existing options
+            datalist.innerHTML = '';
+
+            // Loop through the array and create options
+            array.forEach(item => {
+                const option = document.createElement('option');
+                // Value stored in the dropdown
+                option.value = item;
+                // Text displayed to the user
+                option.textContent = item;
+                datalist.appendChild(option);
+            });
+        }
+
+
+
+        /* ---------- MAP PANEL ---------- */
+        let leafletMap = null;
+        let mapMarker = null;
+        let lastWeatherData = null;
+
+        function initLeafletMap() {
+            if (leafletMap) return;
+            leafletMap = L.map("leafletMap").setView([20, 0], 2);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors",
+            }).addTo(leafletMap);
+
+            leafletMap.on("click", function (e) {
+                const { lat, lng } = e.latlng;
+                placeMapMarker(lat, lng, `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+            });
+        }
+
+        function placeMapMarker(lat, lng, label, weather = null) {
+            if (mapMarker) leafletMap.removeLayer(mapMarker);
+
+            let popupContent;
+            if (weather) {
+                const icon = getWeatherIcon(weather.desc);
+                const uvWarning = weather.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+                popupContent = `
                 <div style="font-family: Segoe UI, Arial, sans-serif; min-width: 180px;">
                     <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">
                         ${icon} ${label.split(",")[0]}
@@ -1261,69 +1233,70 @@ function populateDatalist(array, datalistId) {
                         <tr><td>🌇 Sunset</td><td style="text-align:right">${weather.sunset}</td></tr>
                     </table>
                 </div>`;
-        } else {
-            popupContent = label;
+            } else {
+                popupContent = label;
+            }
+
+            mapMarker = L.marker([lat, lng])
+                .addTo(leafletMap)
+                .bindPopup(popupContent, { maxWidth: 260 })
+                .openPopup();
         }
 
-        mapMarker = L.marker([lat, lng])
-            .addTo(leafletMap)
-            .bindPopup(popupContent, { maxWidth: 260 })
-            .openPopup();
-    }
-
-    async function searchOnMap() {
-        const query = document.getElementById("mapSearchInput").value.trim();
-        if (!query) return;
-        try {
-            const geoRes = await fetch(
-                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-                { headers: { "Accept-Language": "en" } }
-            );
-            const geoData = await geoRes.json();
-            if (!geoData.length) { alert("Location not found."); return; }
-
-            const { lat, lon, display_name } = geoData[0];
-            leafletMap.setView([lat, lon], 10);
-
-            // Try fetching weather for the searched location
+        async function searchOnMap() {
+            const query = document.getElementById("mapSearchInput").value.trim();
+            if (!query) return;
             try {
-                const cityName = display_name.split(",")[0].trim();
-                const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(cityName)}`);
-                if (wRes.ok) {
-                    const w = await wRes.json();
-                    lastWeatherData = w;
-                    placeMapMarker(lat, lon, display_name, w);
-                    return;
-                }
-            } catch (_) {}
+                const geoRes = await fetch(
+                    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+                    { headers: { "Accept-Language": "en" } }
+                );
+                const geoData = await geoRes.json();
+                if (!geoData.length) { alert("Location not found."); return; }
 
-            // Fallback: marker without weather if API call fails
-            placeMapMarker(lat, lon, display_name, null);
-        } catch (err) {
-            alert("Search failed. Check your connection and try again.");
+                const { lat, lon, display_name } = geoData[0];
+                leafletMap.setView([lat, lon], 10);
+
+                // Try fetching weather for the searched location
+                try {
+                    const cityName = display_name.split(",")[0].trim();
+                    const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(cityName)}`);
+                    if (wRes.ok) {
+                        const w = await wRes.json();
+                        lastWeatherData = w;
+                        placeMapMarker(lat, lon, display_name, w);
+                        return;
+                    }
+                } catch (_) { }
+
+                // Fallback: marker without weather if API call fails
+                placeMapMarker(lat, lon, display_name, null);
+            } catch (err) {
+                alert("Search failed. Check your connection and try again.");
+            }
         }
-    }
 
-    window.addEventListener("load", () => {
-        initLeafletMap();
-        fetchHistory();
-    });
-    loadPreferences();
+        window.addEventListener("load", () => {
+            initLeafletMap();
+            fetchHistory();
+        });
+        loadPreferences();
 
-    async function updateMapLocation(city) {
-        try {
-            const res = await fetch(
-                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`
-            );
-            const data = await res.json();
-            if (!data.length) return;
-            const { lat, lon, display_name } = data[0];
-            leafletMap.setView([lat, lon], 9);
-            placeMapMarker(lat, lon, display_name, lastWeatherData);
-        } catch (err) {
-            console.error("Map update failed", err);
+        async function updateMapLocation(city) {
+            try {
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`
+                );
+                const data = await res.json();
+                if (!data.length) return;
+                const { lat, lon, display_name } = data[0];
+                leafletMap.setView([lat, lon], 9);
+                placeMapMarker(lat, lon, display_name, lastWeatherData);
+            } catch (err) {
+                console.error("Map update failed", err);
+            }
         }
-    }
-</script>
+    </script>
 </body>
+
 </html>
