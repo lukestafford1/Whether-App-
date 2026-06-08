@@ -24,16 +24,16 @@ public class WeatherController {
 
 	@GetMapping("/api/weather/current")
 	public ResponseEntity<WeatherDto> getCurrentWeather(
-			@RequestParam(value = "location", defaultValue = "Bellevue") String location,
+			@RequestParam(value = "city", defaultValue = "Bellevue") String city,
 			@AuthenticationPrincipal OAuth2User principal) {
 
 		if (principal != null) {
 			String email = principal.getAttribute("preferred_username");
 			String name = principal.getAttribute("name");
-			searchHistoryService.logUserSearch(email, name, location);
+			searchHistoryService.logUserSearch(email, name, city);
 		}
 
-		WeatherDto liveWeather = weatherService.getWeather(location);
+		WeatherDto liveWeather = weatherService.getWeather(city);
 		return ResponseEntity.ok(liveWeather);
 	}
 

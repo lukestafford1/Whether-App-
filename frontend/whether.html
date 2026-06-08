@@ -732,6 +732,185 @@
             text-align: center;
             margin-top: 10px;
         }
+
+        /* Whether or Not panel */
+        .won-section {
+            margin-top: 40px;
+        }
+        
+        .won-section h2 {
+            color: var(--text-light);
+            font-size: 1.6em;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .won-card {
+            background: var(--search-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: background 0.3s ease;
+        }
+        
+        .won-card.hidden {
+            display: none;
+        }
+        
+        /* Verdict banner */
+        .won-verdict {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .won-verdict.go {
+            background: rgba(67, 233, 123, 0.15);
+            border: 2px solid rgba(67, 233, 123, 0.5);
+        }
+        
+        .won-verdict.caution {
+            background: rgba(254, 225, 64, 0.15);
+            border: 2px solid rgba(254, 225, 64, 0.5);
+        }
+        
+        .won-verdict.stay {
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid rgba(255, 107, 107, 0.5);
+        }
+        
+        .won-verdict-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .won-verdict.go    .won-verdict-indicator { background: #43e97b; box-shadow: 0 0 8px rgba(67,233,123,0.6); }
+        .won-verdict.caution .won-verdict-indicator { background: #fee140; box-shadow: 0 0 8px rgba(254,225,64,0.6); }
+        .won-verdict.stay  .won-verdict-indicator { background: #ff6b6b; box-shadow: 0 0 8px rgba(255,107,107,0.6); }
+        
+        .won-verdict-text strong {
+            display: block;
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .won-verdict-text {
+            flex: 1;
+        }
+        
+        .won-verdict-text span {
+            font-size: 0.9em;
+            color: var(--text-primary);
+            opacity: 0.75;
+            line-height: 1.45;
+        }
+        
+        /* Section label */
+        .won-label {
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+        
+        /* Gear grid */
+        .won-gear-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .won-gear-item {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 12px 14px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        
+        body.dark-mode .won-gear-item {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .won-gear-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .won-gear-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .won-gear-sub {
+            font-size: 0.78em;
+            color: var(--text-primary);
+            opacity: 0.6;
+            line-height: 1.3;
+        }
+        
+        /* Stat pills row */
+        .won-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .won-stat {
+            font-size: 0.8em;
+            padding: 5px 12px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        
+        body.dark-mode .won-stat {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        
+        /* Placeholder state (before first search) */
+        .won-placeholder {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-primary);
+            opacity: 0.45;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .won-placeholder p {
+            margin: 0;
+        }
+        
+        /* Panel fade-in animation */
+        .won-card-content {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            .won-gear-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+        }
+
     </style>
 </head>
 
@@ -822,6 +1001,18 @@
             <button class="scroll-btn" onclick="scrollPanels('right')">
                 Scroll Right ▶
             </button>
+        </div>
+
+        <!-- "Whether ot Not div" -->
+        <div class="won-section">
+            <div class="won-card" id="wonCard">
+                <!-- Placeholder shown until first search -->
+                <div class="won-placeholder" id="wonPlaceholder">
+                    <p>Search for a city to see Whether or not you should go outside.</p>
+                </div>
+                <!-- Populated by updateWhetherOrNot() after each search -->
+                <div id="wonContent" class="won-card-content" style="display: none;"></div>
+            </div>
         </div>
 
         <!-- Map Panel -->
@@ -1113,6 +1304,9 @@
             p[7].querySelector(".temp").textContent = `${w.visibility} km`;
             /*p[7].querySelector(".extra-info").textContent =
                 w.visibility >= 10 ? "Excellent" : "Good"; */
+            
+            // new function call to update the whether or not panel
+            updateWhetherOrNot(w);
         }
 
         function showError(msg) {
@@ -1295,6 +1489,158 @@
             } catch (err) {
                 console.error("Map update failed", err);
             }
+        }
+
+        // Whether or Not functions
+        function analyseWeather(w) {
+            const temp = parseFloat(w.temp);
+            const humidity = parseFloat(w.humidity);
+            const wind = parseFloat(w.wind);
+            const uv = parseFloat(w.uv);
+            const desc = (w.desc || '').toLowerCase();
+        
+            const isStorm = desc.includes('thunder') || desc.includes('storm') || wind >= 65;
+            const isSnow = desc.includes('snow') || desc.includes('blizzard') || temp <= -2;
+            const isRain = desc.includes('rain') || desc.includes('drizzle') || desc.includes('shower');
+            const isHaze = desc.includes('haze') || desc.includes('smoke') || desc.includes('fog') || desc.includes('mist');
+            const isCold = temp <= 5 && temp > 0;
+            const isChilly = temp > 5 && temp <= 14;
+            const isFreeze = temp <= 0;
+            const isHot = temp >= 24;
+            const isWindy = wind >= 40 && !isStorm;
+            const highUV = uv >= 7;
+            const moderateUV = uv >= 4 && uv < 7;
+        
+            // --- Verdict ---
+            let level, headline, reason;
+        
+            if (isStorm) {
+                level = 'stay';
+                headline = 'You should NOT go outside';
+                reason = 'Dangerous conditions - high winds or lightning risk. Not advisable to be outside.';
+            } else if (isFreeze && wind >= 20) {
+                level = 'stay';
+                headline = 'Do NOT go outside';
+                reason = 'Extreme cold with wind chill — dangerous for exposed skin. Stay indoors.';
+            } else if (isFreeze) {
+                leve = 'caution';
+                headline = 'Proceed with caution';
+                reason = 'Extreme cold - minimize exposure';
+            } else if (isHaze) {
+                level = 'caution';
+                headline = 'Proceed with caution';
+                reason = 'Poor air quality - limit time outdoors and avoid prolonged activity.';
+            } else if (isSnow && wind >= 30) {
+                level = 'caution';
+                headline = 'Proceed with caution';
+                reason = 'Snow and wind chill, dress warm.';
+            } else {
+                level = 'go!';
+                headline = 'You should go outside!';
+                reason = isSnow    ? 'Roads and paths may be icy — be careful when driving and walking.'
+                        : isRain    ? 'Rain expected. Wear waterproof clothing!.'
+                        : isCold    ? 'Cold but manageable with proper layers.'
+                        : isHot     ? 'Stay hydrated and seek shade during the hottest part of the day.'
+                        : highUV    ? 'Great conditions! Be sure to protect yourself from the sun.'
+                        : isChilly  ? 'Moderate conditions. Light layering is recommended.'
+                        : 'Comfortable conditions for being outside.';
+            }
+        
+            // Gear list
+            const gear = [];
+        
+            // Temperature-driven clothing
+            if (temp <= -2) {
+                gear.push({ name: 'Heavy insulated coat',  sub: 'Prioritze waterproof and wind-resistant layers' });
+                gear.push({ name: 'Thermal underlayers',   sub: 'Base layer to keep core temp up' });
+                gear.push({ name: 'Thick Gloves',                sub: 'Preferrably waterproof and insulated' });
+                gear.push({ name: 'Scarf and hat',          sub: 'Cover ears and neck' });
+                gear.push({ name: 'Snow boots',            sub: 'Prioritize waterproof and insulated boots' });
+            } else if (isCold) {
+                gear.push({ name: 'Warm jacket',           sub: 'Keep body warm and cozy' });
+                gear.push({ name: 'Gloves',                sub: 'Preferrably wind-resistant' });
+                gear.push({ name: 'Closed shoes',          sub: 'Keep feet warm and dry' });
+            } else if (isChilly) {
+                gear.push({ name: 'Light jacket or hoodie', sub: 'Any light layer to provide some warmth' });
+            } else if (isHot) {
+                gear.push({ name: 'Light clothing',        sub: 'Dress light!' });
+                gear.push({ name: 'Water bottle',          sub: 'Stay hydrated!' });
+            } else {
+                gear.push({ name: 'Comfortable layers',    sub: 'Comfy and casual!' });
+            }
+        
+            // Rain gear
+            if (isRain) {
+                gear.push({ name: 'Umbrella or rain poncho', sub: 'Keep dry!' });
+                gear.push({ name: 'Waterproof jacket',       sub: 'Best while on the move' });
+                if (!isCold && !isSnow)
+                    gear.push({ name: 'Rain boots',          sub: 'Keep your feet dry' });
+            }
+        
+            // Snow-specific
+            if (isSnow && temp > -2) {
+                if (!gear.find(g => g.name === 'Snow boots'))
+                    gear.push({ name: 'Snow boots',          sub: 'Prioritize waterproof and insulated boots' });
+            }
+        
+            // UV protection
+            if (highUV && !isRain && !isStorm && !isSnow) {
+                gear.push({ name: 'High SPF Sunscreen',    sub: 'UV index ' + Math.round(uv) + ' — reapply every 2h' });
+                gear.push({ name: 'Sunglasses',           sub: 'UV-rated and polarized lenses' });
+                gear.push({ name: 'Hat or cap',           sub: 'Shield your face and neck' });
+            } else if (moderateUV && !isRain && !isStorm) {
+                gear.push({ name: 'Sunscreen',            sub: 'UV index ' + Math.round(uv) + ' — moderate exposure' });
+                gear.push({ name: 'Sunglasses',           sub: 'Polarized lenses recommended' });
+            }
+        
+            // Wind
+            if (isWindy) {
+                gear.push({ name: 'Windbreaker/Jacket',           sub: 'Block  — ' + Math.round(wind) + ' km/h winds' });
+            }
+        
+            // Haze / air quality
+            if (isHaze) {
+                gear.push({ name: 'Face mask',             sub: 'N95 or equivalent preferred' });
+            }
+        
+            return { level, headline, reason, gear };
+        }
+        
+        function updateWhetherOrNot(w) {
+            const { level, headline, reason, gear } = analyseWeather(w);
+        
+            const gearHTML = gear.map(g => `
+                <div class="won-gear-item">
+                    <div class="won-gear-name">${g.name}</div>
+                    <div class="won-gear-sub">${g.sub}</div>
+                </div>
+            `).join('');
+        
+            const statsHTML = [
+                `${Math.round(parseFloat(w.temp))}°C`,
+                `${Math.round(parseFloat(w.humidity))}% humidity`,
+                `${Math.round(parseFloat(w.wind))} km/h wind`,
+                `UV ${Math.round(parseFloat(w.uv))}`,
+                w.desc
+            ].map(s => `<span class="won-stat">${s}</span>`).join('');
+        
+            document.getElementById('wonPlaceholder').style.display = 'none';
+        
+            const content = document.getElementById('wonContent');
+            content.style.display = 'block';
+            content.innerHTML = `
+                <div class="won-verdict ${level}">
+                    <div class="won-verdict-indicator"></div>
+                    <div class="won-verdict-text">
+                        <strong>${headline}</strong>
+                        <span>${reason}</span>
+                    </div>
+                </div>
+                <div class="won-label">What to wear and bring</div>
+                <div class="won-gear-grid">${gearHTML}</div>
+                
+                <div class="won-stats">${statsHTML}</div>
+            `;
         }
     </script>
 </body>
