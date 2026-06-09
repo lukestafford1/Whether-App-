@@ -1568,9 +1568,9 @@
           desc.includes("smoke") ||
           desc.includes("fog") ||
           desc.includes("mist");
-        const isCold = temp <= 5 && temp > 0;
+        const isCold = temp <= 10;
         const isChilly = temp > 5 && temp <= 14;
-        const isFreeze = temp <= 0;
+        const isFreeze = temp <= 5;
         const isHot = temp >= 24;
         const isWindy = wind >= 40 && !isStorm;
         const highUV = uv >= 7;
