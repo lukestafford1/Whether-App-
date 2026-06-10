@@ -3,6 +3,7 @@ package com.app.whether.weather;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,12 +25,14 @@ public class SearchHistoryService {
 		SearchHistory existingSearch = historyRepository.findByUserAndCitySearchedIgnoreCase(user, location);
 		if (existingSearch == null) {
 			historyRepository.save(new SearchHistory(user, location));
-		}
+		} else {
+        	existingSearch.setSearchTime(LocalDateTime.now());  
+    	}
 	}
 
 	public List<String> getRecentSearches(String email) {
 		return userRepository.findByEmail(email)
-				.map(user -> historyRepository.findTop10ByUserOrderByIdDesc(user)
+				.map(user -> historyRepository.findTop10ByUserOrderBySearchTimeDesc(user)
 						.stream()
 						.map(SearchHistory::getCitySearched)
 						.toList())

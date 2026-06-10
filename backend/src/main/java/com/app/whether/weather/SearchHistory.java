@@ -39,4 +39,8 @@ public class SearchHistory {
 	public LocalDateTime getSearchTime() {
 		return searchTime;
 	}
+
+	public void setSearchTime(LocalDateTime searchTime) {
+    	this.searchTime = searchTime;
+	}
 }
