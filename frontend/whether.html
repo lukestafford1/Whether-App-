@@ -839,6 +839,16 @@
             padding: 12px 14px;
             transition: transform 0.2s, background 0.2s;
         }
+
+        body:not(.dark-mode) .won-gear-item {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        body:not(.dark-mode) .won-stat {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.15);
+        }
         
         body.dark-mode .won-gear-item {
             background: rgba(255, 255, 255, 0.06);
@@ -964,10 +974,8 @@
                 <div class="description">Direction: --</div>
             </div>
             <div class="panel panel-cool" data-panel="forecast">
-                <h3> 3-Day Forecast</h3>
+                <h3> Current Conditions </h3>
                 <div class="temp">--</div>
-                <div class="description">Upcoming weather</div>
-                <div class="extra-info">Extended forecast coming soon</div>
             </div>
             <div class="panel panel-dark" data-panel="uv">
                 <h3> UV Index</h3>
@@ -989,7 +997,6 @@
                 <h3> Visibility</h3>
                 <div class="temp">-- km</div>
                 <div class="description">Clear conditions</div>
-                <div class="extra-info">Standard: 10+ km</div>
             </div>
         </div>
 
@@ -1025,7 +1032,7 @@
         <!-- Weather Result Display -->
         <div id="weatherResult" class="weather-result" style="display: none">
             <h2 id="cityName"></h2>
-            <div class="weather-icon" id="weatherIcon">🌤️</div>
+            <div class="weather-icon" id="weatherIcon"></div>
             <div class="temp" id="temperature"></div>
             <div id="description"></div>
             <div id="humidity"></div>
@@ -1047,10 +1054,10 @@
                 <a href="#" onclick="
               scrollToTop();
               return false;
-            ">⬆️ Back to Top</a>
+            ">Back to Top</a>
             </div>
             <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
-                Created by the "Whether" App Team | Version 1.0
+                Created by the "Whether" App Team | Version 2.0
             </p>
         </div>
     </div>
@@ -1061,24 +1068,35 @@
             <button class="close-about-btn" id="closeAboutOverlayBtn">
                 &times;
             </button>
-            <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
+            <h2><span class="about-icon"></span> About "Whether" App</h2>
             <div class="about-description">
                 <p>
-                    Your go-to destination for accurate, real-time weather information
-                    from around the globe. Whether you're planning a trip, checking
-                    local conditions, or just curious about the weather, our app
-                    provides comprehensive data in a clear and easy-to-read format.
+                    "Whether" Apps's purpose is to help you decide whether or not you
+                    should go outside based off a location's weather conditions, alongside
+                    providing recommendations on what to wear and bring with you if you 
+                    were to visit that particular location (or simply go outside).
                 </p>
+                <p style="font-size: 0.9em; opacity: 0.7; margin-top: 10px;">
+                    Search for a city, country, state, town, landmark, or specific address to get
+                    detailed weather information, a verdict on whether to go outside, 
+                    recommendations on what to bring, and an interactive map view of the 
+                    location.
+                </p>
+                <p style="font-size: 0.9em; opacity: 0.7; margin-top: 10px;">
+                    You can also click on the map to explore weather data anywhere on Earth!
+                </p>
+
             </div>
             <div class="coverage-badge">
-                🌍 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
+                 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
             </div>
             <div class="feature-list">
-                <span>✨ Interactive panels</span>
-                <span>🌙 Dark mode</span>
-                <span>📜 Search history</span>
-                <span>🖱️ Scrollable cards</span>
-                <span>📱 Fully responsive</span>
+                <span> Interactive map</span>
+                <span> Dark mode</span>
+                <span> Search history</span>
+                <span> Scrollable cards</span>
+                <span> Real-time updates</span>
+                <span> Accurate recommendations</span>
             </div>
             <div class="about-footer">
                 <p>
@@ -1212,14 +1230,14 @@
         async function getWeather() {
             if (isLoading) return;
 
-            const city = document.getElementById("cityInput").value.trim();
+            const location = document.getElementById("cityInput").value.trim();
 
-            if (!city) {
+            if (!location) {
                 showError("Please enter a city name!");
                 return;
             }
 
-            localStorage.setItem("lastCity", city);
+            localStorage.setItem("lastCity", location);
             isLoading = true;
             const btn = document.getElementById("searchBtn");
             btn.classList.add("loading");
@@ -1227,7 +1245,7 @@
 
             try {
                 // Hit your live Spring Boot Backend
-                const response = await fetch(`/api/weather/current?city=${encodeURIComponent(city)}`);
+                const response = await fetch(`/api/weather/current?city=${encodeURIComponent(location)}`);
 
                 // If Entra ID intercepted the call (session expired), force a redirect to login
                 if (response.redirected) {
@@ -1244,12 +1262,12 @@
                 document.getElementById("errorMessage").innerHTML = "";
 
                 // Display the live data
-                displayWeather(city, weather);
-                updatePanels(weather, city);
+                displayWeather(location, weather);
+                updatePanels(weather, location);
 
                 // Refresh the dropdown history from the DB since we just searched!
                 await fetchHistory();
-                await updateMapLocation(city);
+                await updateMapLocation(location);
 
             } catch (err) {
                 showError("Server error or city not found. Is the backend running?");
@@ -1262,8 +1280,8 @@
         }
 
 
-        function displayWeather(city, w) {
-            document.getElementById("cityName").textContent = city.toUpperCase();
+        function displayWeather(location, w) {
+            document.getElementById("cityName").textContent = location.toUpperCase();
             document.getElementById("weatherIcon").textContent = getWeatherIcon(
                 w.desc
             );
@@ -1275,7 +1293,7 @@
             document.getElementById("weatherResult").style.display = "block";
         }
 
-        function updatePanels(w, city) {
+        function updatePanels(w, location) {
             const p = document.querySelectorAll(".panel");
             p[0].querySelector(".temp").textContent =
                 `${w.temp}°C`;
@@ -1293,9 +1311,9 @@
                 `${w.desc} ${getWeatherIcon(w.desc)}`;
             p[4].querySelector(".temp").textContent = w.uv;
             p[4].querySelector(".extra-info").textContent =
-                w.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
-            p[5].querySelector(".temp").innerHTML = `${w.sunrise} 🌅`;
-            p[5].querySelector(".description").innerHTML = `${w.sunset} 🌇`;
+                w.uv > 6 ? " Sunscreen needed" : " Moderate";
+            p[5].querySelector(".temp").innerHTML = `${w.sunrise} `;
+            p[5].querySelector(".description").innerHTML = `${w.sunset} `;
             let day =
                 parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
             if (day < 0) day += 12;
@@ -1387,14 +1405,43 @@
 
         function initLeafletMap() {
             if (leafletMap) return;
-            leafletMap = L.map("leafletMap").setView([20, 0], 2);
+            leafletMap = L.map("leafletMap", { minZoom: 3 }).setView([20, 0], 3);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: "© OpenStreetMap contributors",
             }).addTo(leafletMap);
 
+            /*
             leafletMap.on("click", function (e) {
                 const { lat, lng } = e.latlng;
                 placeMapMarker(lat, lng, `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+            }); 
+            */
+            leafletMap.on("click", async function (e) {
+                const { lat, lng } = e.latlng;
+
+                // Reverse-geocode to get a place name
+                const geoRes = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+                    { headers: { "Accept-Language": "en" } }
+                );
+                const geoData = await geoRes.json();
+
+                // Extract the best available city name from the response
+                const addr = geoData.address || {};
+                const cityName = addr.neighbourhood?.trim() || addr.suburb?.trim() || addr.city?.trim() || addr.town?.trim() || addr.village?.trim() || addr.county?.trim() || addr.state?.trim(); 
+                const displayLabel = [addr.neighbourhood?.trim() || addr.suburb?.trim() || addr.city?.trim() || addr.town?.trim() || addr.village?.trim() || addr.county?.trim(), addr.state?.trim(), addr.country?.trim()]
+                                    .filter(s => s && s.length > 0).join(", ");
+
+                // Fetch weather for that location
+                const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(cityName)}`);
+                if (wRes.ok) {
+                    const w = await wRes.json();
+                    lastWeatherData = w;
+                    placeMapMarker(lat, lng, displayLabel, w);
+                } else {
+                    // Fallback: pin without weather if city isn't found
+                    placeMapMarker(lat, lng, displayLabel, null);
+                }
             });
         }
 
@@ -1404,12 +1451,14 @@
             let popupContent;
             if (weather) {
                 const icon = getWeatherIcon(weather.desc);
-                const uvWarning = weather.uv > 6 ? "⚠️ Sunscreen needed" : "🟡 Moderate";
+                const uvWarning = weather.uv > 6 ? "Sunscreen needed" : "Moderate";
                 popupContent = `
                 <div style="font-family: Segoe UI, Arial, sans-serif; min-width: 180px;">
                     <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">
-                        ${icon} ${label.split(",")[0]}
+                        <span style="font-size: 8em; display: block; text-align: center; margin-bottom: 8px;">${icon}</span>
+                        ${label.split(",")[0]}
                     </div>
+
                     <div style="font-size: 1.6em; font-weight: bold; color: #667eea; margin: 4px 0;">
                         ${weather.temp}°C
                     </div>
@@ -1418,13 +1467,13 @@
                     </div>
                     <hr style="border: none; border-top: 1px solid #eee; margin: 6px 0;">
                     <table style="width:100%; font-size: 0.82em; color: #444; border-collapse: collapse;">
-                        <tr><td>💧 Humidity</td><td style="text-align:right">${weather.humidity}%</td></tr>
-                        <tr><td>💨 Wind</td><td style="text-align:right">${weather.wind} km/h ${weather.windDir}</td></tr>
-                        <tr><td>☀️ UV Index</td><td style="text-align:right">${weather.uv} &mdash; ${uvWarning}</td></tr>
-                        <tr><td>📊 Pressure</td><td style="text-align:right">${weather.pressure} hPa</td></tr>
-                        <tr><td>👁️ Visibility</td><td style="text-align:right">${weather.visibility} km</td></tr>
-                        <tr><td>🌅 Sunrise</td><td style="text-align:right">${weather.sunrise}</td></tr>
-                        <tr><td>🌇 Sunset</td><td style="text-align:right">${weather.sunset}</td></tr>
+                        <tr><td> Humidity</td><td style="text-align:right">${weather.humidity}%</td></tr>
+                        <tr><td> Wind</td><td style="text-align:right">${weather.wind} km/h ${weather.windDir}</td></tr>
+                        <tr><td> UV Index</td><td style="text-align:right">${weather.uv} &mdash; ${uvWarning}</td></tr>
+                        <tr><td> Pressure</td><td style="text-align:right">${weather.pressure} hPa</td></tr>
+                        <tr><td> Visibility</td><td style="text-align:right">${weather.visibility} km</td></tr>
+                        <tr><td> Sunrise</td><td style="text-align:right">${weather.sunrise}</td></tr>
+                        <tr><td> Sunset</td><td style="text-align:right">${weather.sunset}</td></tr>
                     </table>
                 </div>`;
             } else {
@@ -1476,10 +1525,10 @@
         });
         loadPreferences();
 
-        async function updateMapLocation(city) {
+        async function updateMapLocation(location) {
             try {
                 const res = await fetch(
-                    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`
+                    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`
                 );
                 const data = await res.json();
                 if (!data.length) return;
@@ -1503,9 +1552,10 @@
             const isSnow = desc.includes('snow') || desc.includes('blizzard') || temp <= -2;
             const isRain = desc.includes('rain') || desc.includes('drizzle') || desc.includes('shower');
             const isHaze = desc.includes('haze') || desc.includes('smoke') || desc.includes('fog') || desc.includes('mist');
-            const isCold = temp <= 5 && temp > 0;
-            const isChilly = temp > 5 && temp <= 14;
-            const isFreeze = temp <= 0;
+            const isCold = temp > 5 && temp <= 10;
+            const isChilly = temp > 10 && temp <= 18;
+            const isFreeze = temp <= 5;
+            const isWarm = temp > 18 && temp < 24;
             const isHot = temp >= 24;
             const isWindy = wind >= 40 && !isStorm;
             const highUV = uv >= 7;
@@ -1523,7 +1573,7 @@
                 headline = 'Do NOT go outside';
                 reason = 'Extreme cold with wind chill — dangerous for exposed skin. Stay indoors.';
             } else if (isFreeze) {
-                leve = 'caution';
+                level = 'caution';
                 headline = 'Proceed with caution';
                 reason = 'Extreme cold - minimize exposure';
             } else if (isHaze) {
@@ -1535,12 +1585,13 @@
                 headline = 'Proceed with caution';
                 reason = 'Snow and wind chill, dress warm.';
             } else {
-                level = 'go!';
+                level = 'go';
                 headline = 'You should go outside!';
                 reason = isSnow    ? 'Roads and paths may be icy — be careful when driving and walking.'
                         : isRain    ? 'Rain expected. Wear waterproof clothing!.'
                         : isCold    ? 'Cold but manageable with proper layers.'
                         : isHot     ? 'Stay hydrated and seek shade during the hottest part of the day.'
+                        : isWarm    ? 'It is a nice day out. Enjoy the weather!'
                         : highUV    ? 'Great conditions! Be sure to protect yourself from the sun.'
                         : isChilly  ? 'Moderate conditions. Light layering is recommended.'
                         : 'Comfortable conditions for being outside.';
