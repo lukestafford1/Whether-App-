@@ -29,7 +29,7 @@ public class SearchHistoryService {
 
 	public List<String> getRecentSearches(String email) {
 		return userRepository.findByEmail(email)
-				.map(user -> historyRepository.findTop5ByUserOrderByIdDesc(user)
+				.map(user -> historyRepository.findTop10ByUserOrderByIdDesc(user)
 						.stream()
 						.map(SearchHistory::getCitySearched)
 						.toList())
