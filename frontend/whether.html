@@ -1567,15 +1567,15 @@
         
             // Temperature-driven clothing
             if (temp <= -2) {
-                gear.push({ name: 'Heavy insulated coat',  sub: 'Prioritze waterproof and wind-resistant layers' });
+                gear.push({ name: 'Heavy insulated coat',  sub: 'Prioritize waterproof and wind-resistant layers' });
                 gear.push({ name: 'Thermal underlayers',   sub: 'Base layer to keep core temp up' });
-                gear.push({ name: 'Thick Gloves',                sub: 'Preferrably waterproof and insulated' });
+                gear.push({ name: 'Thick gloves',                sub: 'Preferably waterproof and insulated' });
                 gear.push({ name: 'Scarf and hat',          sub: 'Cover ears and neck' });
                 gear.push({ name: 'Snow boots',            sub: 'Prioritize waterproof and insulated boots' });
             } else if (isCold) {
                 gear.push({ name: 'Warm jacket',           sub: 'Keep body warm and cozy' });
-                gear.push({ name: 'Gloves',                sub: 'Preferrably wind-resistant' });
-                gear.push({ name: 'Closed shoes',          sub: 'Keep feet warm and dry' });
+                gear.push({ name: 'Gloves',                sub: 'Preferably wind-resistant' });
+                gear.push({ name: 'Closed-toe shoes',          sub: 'Keep feet warm and dry' });
             } else if (isChilly) {
                 gear.push({ name: 'Light jacket or hoodie', sub: 'Any light layer to provide some warmth' });
             } else if (isHot) {
@@ -1601,7 +1601,7 @@
         
             // UV protection
             if (highUV && !isRain && !isStorm && !isSnow) {
-                gear.push({ name: 'High SPF Sunscreen',    sub: 'UV index ' + Math.round(uv) + ' — reapply every 2h' });
+                gear.push({ name: 'High SPF sunscreen',    sub: 'UV index ' + Math.round(uv) + ' — reapply every 2h' });
                 gear.push({ name: 'Sunglasses',           sub: 'UV-rated and polarized lenses' });
                 gear.push({ name: 'Hat or cap',           sub: 'Shield your face and neck' });
             } else if (moderateUV && !isRain && !isStorm) {
@@ -1611,7 +1611,7 @@
         
             // Wind
             if (isWindy) {
-                gear.push({ name: 'Windbreaker/Jacket',           sub: 'Block  — ' + Math.round(wind) + ' km/h winds' });
+                gear.push({ name: 'Windbreaker/jacket',           sub: 'Block  — ' + Math.round(wind) + ' km/h winds' });
             }
         
             return { level, headline, reason, gear };
