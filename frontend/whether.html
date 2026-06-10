@@ -499,14 +499,14 @@
       }
 
       .bottom-panel a {
-        color: #ff6b6b;
+        color: #83e5f5;
         text-decoration: none;
         font-weight: bold;
         transition: color 0.2s;
       }
 
       .bottom-panel a:hover {
-        color: #ff5252;
+        color: #83e5f5;
         text-decoration: underline;
       }
 
@@ -521,7 +521,7 @@
       .footer-links button {
         background: none;
         border: none;
-        color: #ff6b6b;
+        color: #83e5f5;
         cursor: pointer;
         font-size: 1em;
         font-weight: bold;
@@ -529,7 +529,7 @@
       }
 
       .footer-links button:hover {
-        color: #ff5252;
+        color: #83e5f5;
         transform: scale(1.05);
       }
 
@@ -589,7 +589,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        border-bottom: 3px solid #ff6b6b;
+        border-bottom: 3px solid #83e5f5;
         display: inline-block;
         padding-bottom: 8px;
       }
@@ -608,13 +608,13 @@
       }
 
       .about-card .coverage-badge {
-        background: rgba(255, 107, 107, 0.15);
+        background: rgba(107, 245, 255, 0.15);
         padding: 12px 18px;
         border-radius: 60px;
         display: inline-block;
         margin: 15px 0;
         font-weight: 500;
-        border-left: 4px solid #ff6b6b;
+        border-left: 4px solid #83e5f5;
       }
 
       .about-card .feature-list {
@@ -647,7 +647,7 @@
 
       .close-about-btn:hover {
         transform: scale(1.2);
-        color: #ff6b6b;
+        color: #83e5f5;
       }
 
       .about-footer {
@@ -1093,8 +1093,10 @@
 
       <!-- PR2: Bottom Panel (simplified, no duplicate about paragraph, only a teaser) -->
       <div class="bottom-panel">
-        <h3>Weather Dashboard</h3>
-        <p>Real-time insights with detailed weather metrics.</p>
+        <h3>"Whether" Dashboard</h3>
+        <p>
+          Real-time Weather Insights, Personalized "Whether" Recommendations.
+        </p>
         <div class="footer-links">
           <button id="bottomAboutBtn">📖 About "Whether" App</button>
           <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
@@ -1110,7 +1112,7 @@
           >
         </div>
         <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
-          Created by the "Whether" App Team | Version 1.0
+          Created by the "Whether" App Team | Version 2.0
         </p>
       </div>
     </div>
@@ -1121,27 +1123,38 @@
         <button class="close-about-btn" id="closeAboutOverlayBtn">
           &times;
         </button>
-        <h2><span class="about-icon">🌤️</span> About "Whether" App</h2>
+        <h2><span class="about-icon"></span> About "Whether" App</h2>
         <div class="about-description">
           <p>
-            Your go-to destination for accurate, real-time weather information
-            from around the globe. Whether you're planning a trip, checking
-            local conditions, or just curious about the weather, our app
-            provides comprehensive data in a clear and easy-to-read format.
+            <strong
+              >"Whether" App's purpose is to help you decide whether or not you
+              should go outside based off a location's weather conditions, along
+              side providing recommendations on what to wear and bring with you
+              if you were to visit that particular location.</strong
+            >
+          </p>
+          <p style="margin-top: 15px">
+            Search for a city, country, state, town, landmark, or specific
+            address to get deatailed weather information, a verdict on whether
+            to go outside, recommendations on what to bring, and a interactive
+            map view of the location.
           </p>
         </div>
         <div class="coverage-badge">
-          🌍 <strong>Current Coverage:</strong> Hundreds of cities worldwide!
+          🌍 <strong>Real-time weather coverage</strong> Search worldwide!
         </div>
         <div class="feature-list">
-          <span>✨ Interactive panels</span>
+          <span>🔐 Secure login</span>
+          <span>🔎 Searchable locations</span>
+          <span>📜 Search History</span>
+          <span>🌤️ Real-time Weather Data via API</span>
+          <span>💡 "Whether" Verdict</span>
+          <span>🧥 Recommended Gear</span>
+          <span>🗺️ Interactive Search Map</span>
           <span>🌙 Dark mode</span>
-          <span>📜 Search history</span>
-          <span>🖱️ Scrollable cards</span>
-          <span>📱 Fully responsive</span>
         </div>
         <div class="about-footer">
-          <p>Powered by Open-Meteo API</p>
+          <p>Powered by Open-Meteo API • OpenStreetMap • Spring Boot</p>
           <p style="margin-top: 8px">
             Brought to you by the "Whether" App Team!
           </p>
