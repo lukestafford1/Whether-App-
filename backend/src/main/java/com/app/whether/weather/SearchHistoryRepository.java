@@ -10,5 +10,5 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Lo
 	SearchHistory findByUserAndCitySearchedIgnoreCase(AppUser user, String citySearched);
 
 	// Grabs the 10 most recent searches for the UI
-	List<SearchHistory> findTop10ByUserOrderByIdDesc(AppUser user);
+	List<SearchHistory> findTop10ByUserOrderBySearchTimeDesc(AppUser user);
 }
