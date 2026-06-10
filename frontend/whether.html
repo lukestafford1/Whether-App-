@@ -909,12 +909,8 @@
             <button id="darkModeToggleBtn" onclick="toggleDarkMode()">
                 <span> Dark Mode</span>
             </button>
-            <hr />
             <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
             <button id="aboutPageBtn"><span> About "Whether" App</span></button>
-            <button onclick="scrollToBottom()">
-                <span> Scroll to Info</span>
-            </button>
         </div>
     </div>
 
@@ -985,7 +981,7 @@
             </button>
         </div>
 
-        <!-- "Whether ot Not div" -->
+        <!-- "Whether or Not div" -->
         <div class="won-section">
             <div class="won-card" id="wonCard">
                 <!-- Placeholder shown until first search -->
@@ -1277,8 +1273,8 @@
             p[4].querySelector(".temp").textContent = w.uv;
             p[4].querySelector(".extra-info").textContent =
                 w.uv > 6 ? " Sunscreen needed" : " Moderate";
-            p[5].querySelector(".temp").innerHTML = `${w.sunrise} `;
-            p[5].querySelector(".description").innerHTML = `${w.sunset} `;
+            p[5].querySelector(".temp").innerHTML = `Sunrise: ${w.sunrise} `;
+            p[5].querySelector(".description").innerHTML = `Sunset: ${w.sunset} `;
             let day =
                 parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
             if (day < 0) day += 12;
