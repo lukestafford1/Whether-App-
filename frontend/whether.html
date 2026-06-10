@@ -936,8 +936,6 @@
             <div class="panel panel-medium" data-panel="humidity">
                 <h3> Humidity</h3>
                 <div class="temp">--%</div>
-                <!--<div class="description">Moisture Level</div> -->
-                <!---<div class="extra-info">Comfort: --</div> -->
             </div>
             <div class="panel panel-large" data-panel="wind">
                 <h3> Wind Speed</h3>
@@ -951,8 +949,8 @@
             <div class="panel panel-dark" data-panel="uv">
                 <h3> UV Index</h3>
                 <div class="temp">--</div>
-                <div class="description">Sun Intensity</div>
-                <div class="extra-info">Protection: --</div>
+                <!--<div class="description">Sun Intensity</div>-->
+                <!--<div class="extra-info">Protection: --</div>-->
             </div>
             <div class="panel panel-warm" data-panel="sun">
                 <h3> Sunrise/Sunset</h3>
@@ -1022,10 +1020,12 @@
                 <button id="bottomDarkModeToggleBtn" onclick="toggleDarkMode()">
                      Dark Mode
                 </button>
+                <button>
                 <a href="#" onclick="
               scrollToTop();
               return false;
             ">Back to Top</a>
+            </button>
             </div>
             <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
                 Created by the "Whether" App Team | Version 2.0
@@ -1262,8 +1262,6 @@
                 `Feels like: ${w.feelsLike}°C`;
             p[1].querySelector(".temp").textContent =
                 `${w.humidity}%`;
-            /*p[1].querySelector(".extra-info").textContent =
-                `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`; */
             p[2].querySelector(".temp").textContent =
                 `${w.wind} km/h`;
             p[2].querySelector(".description").textContent =
@@ -1271,8 +1269,8 @@
             p[3].querySelector(".temp").innerHTML =
                 `${w.desc} ${getWeatherIcon(w.desc)}`;
             p[4].querySelector(".temp").textContent = w.uv;
-            p[4].querySelector(".extra-info").textContent =
-                w.uv > 6 ? " Sunscreen needed" : " Moderate";
+            /*p[4].querySelector(".extra-info").textContent =
+                w.uv > 6 ? " Sunscreen needed" : " Moderate";*/
             p[5].querySelector(".temp").innerHTML = `Sunrise: ${w.sunrise} `;
             p[5].querySelector(".description").innerHTML = `Sunset: ${w.sunset} `;
             let day =
