@@ -920,12 +920,8 @@
             <button id="darkModeToggleBtn" onclick="toggleDarkMode()">
                 <span> Dark Mode</span>
             </button>
-            <hr />
             <!-- About button now opens the SEPARATE about page overlay (dedicated page) -->
             <button id="aboutPageBtn"><span> About "Whether" App</span></button>
-            <button onclick="scrollToBottom()">
-                <span> Scroll to Info</span>
-            </button>
         </div>
     </div>
 
@@ -951,8 +947,6 @@
             <div class="panel panel-medium" data-panel="humidity">
                 <h3> Humidity</h3>
                 <div class="temp">--%</div>
-                <!--<div class="description">Moisture Level</div> -->
-                <!---<div class="extra-info">Comfort: --</div> -->
             </div>
             <div class="panel panel-large" data-panel="wind">
                 <h3> Wind Speed</h3>
@@ -966,8 +960,8 @@
             <div class="panel panel-dark" data-panel="uv">
                 <h3> UV Index</h3>
                 <div class="temp">--</div>
-                <div class="description">Sun Intensity</div>
-                <div class="extra-info">Protection: --</div>
+                <!--<div class="description">Sun Intensity</div>-->
+                <!--<div class="extra-info">Protection: --</div>-->
             </div>
             <div class="panel panel-warm" data-panel="sun">
                 <h3> Sunrise/Sunset</h3>
@@ -996,7 +990,7 @@
             </button>
         </div>
 
-        <!-- "Whether ot Not div" -->
+        <!-- "Whether or Not div" -->
         <div class="won-section">
             <div class="won-card" id="wonCard">
                 <!-- Placeholder shown until first search -->
@@ -1038,7 +1032,6 @@
                      Dark Mode
                 </button>
                 <button onclick="scrollToTop()">Back to Top</button>
-                
             </div>
             <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8">
                 Created by the "Whether" App Team | Version 2.0
@@ -1275,8 +1268,6 @@
                 `Feels like: ${w.feelsLike}°C`;
             p[1].querySelector(".temp").textContent =
                 `${w.humidity}%`;
-            /*p[1].querySelector(".extra-info").textContent =
-                `Comfort: ${parseInt(w.humidity) > 70 ? "Humid" : "Comfortable"}`; */
             p[2].querySelector(".temp").textContent =
                 `${w.wind} km/h`;
             p[2].querySelector(".description").textContent =
@@ -1284,10 +1275,10 @@
             p[3].querySelector(".temp").innerHTML =
                 `${w.desc} ${getWeatherIcon(w.desc)}`;
             p[4].querySelector(".temp").textContent = w.uv;
-            p[4].querySelector(".extra-info").textContent =
-                w.uv > 6 ? " Sunscreen needed" : " Moderate";
-            p[5].querySelector(".temp").innerHTML = `${w.sunrise} `;
-            p[5].querySelector(".description").innerHTML = `${w.sunset} `;
+            /*p[4].querySelector(".extra-info").textContent =
+                w.uv > 6 ? " Sunscreen needed" : " Moderate";*/
+            p[5].querySelector(".temp").innerHTML = `Sunrise: ${w.sunrise} `;
+            p[5].querySelector(".description").innerHTML = `Sunset: ${w.sunset} `;
             let day =
                 parseInt(w.sunset.split(":")[0]) - parseInt(w.sunrise.split(":")[0]);
             if (day < 0) day += 12;
@@ -1576,15 +1567,15 @@
         
             // Temperature-driven clothing
             if (temp <= -2) {
-                gear.push({ name: 'Heavy insulated coat',  sub: 'Prioritze waterproof and wind-resistant layers' });
+                gear.push({ name: 'Heavy insulated coat',  sub: 'Prioritize waterproof and wind-resistant layers' });
                 gear.push({ name: 'Thermal underlayers',   sub: 'Base layer to keep core temp up' });
-                gear.push({ name: 'Thick Gloves',                sub: 'Preferrably waterproof and insulated' });
+                gear.push({ name: 'Thick gloves',                sub: 'Preferably waterproof and insulated' });
                 gear.push({ name: 'Scarf and hat',          sub: 'Cover ears and neck' });
                 gear.push({ name: 'Snow boots',            sub: 'Prioritize waterproof and insulated boots' });
             } else if (isCold) {
                 gear.push({ name: 'Warm jacket',           sub: 'Keep body warm and cozy' });
-                gear.push({ name: 'Gloves',                sub: 'Preferrably wind-resistant' });
-                gear.push({ name: 'Closed shoes',          sub: 'Keep feet warm and dry' });
+                gear.push({ name: 'Gloves',                sub: 'Preferably wind-resistant' });
+                gear.push({ name: 'Closed-toe shoes',          sub: 'Keep feet warm and dry' });
             } else if (isChilly) {
                 gear.push({ name: 'Light jacket or hoodie', sub: 'Any light layer to provide some warmth' });
             } else if (isHot) {
@@ -1610,7 +1601,7 @@
         
             // UV protection
             if (highUV && !isRain && !isStorm && !isSnow) {
-                gear.push({ name: 'High SPF Sunscreen',    sub: 'UV index ' + Math.round(uv) + ' — reapply every 2h' });
+                gear.push({ name: 'High SPF sunscreen',    sub: 'UV index ' + Math.round(uv) + ' — reapply every 2h' });
                 gear.push({ name: 'Sunglasses',           sub: 'UV-rated and polarized lenses' });
                 gear.push({ name: 'Hat or cap',           sub: 'Shield your face and neck' });
             } else if (moderateUV && !isRain && !isStorm) {
@@ -1620,7 +1611,7 @@
         
             // Wind
             if (isWindy) {
-                gear.push({ name: 'Windbreaker/Jacket',           sub: 'Block  — ' + Math.round(wind) + ' km/h winds' });
+                gear.push({ name: 'Windbreaker/jacket',           sub: 'Block  — ' + Math.round(wind) + ' km/h winds' });
             }
         
             return { level, headline, reason, gear };
