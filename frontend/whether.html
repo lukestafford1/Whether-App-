@@ -1376,6 +1376,7 @@
         let leafletMap = null;
         let mapMarker = null;
         let lastWeatherData = null;
+        let mapClickEnabled = true;
 
         function initLeafletMap() {
             if (leafletMap) return;
@@ -1383,38 +1384,54 @@
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: "© OpenStreetMap contributors",
             }).addTo(leafletMap);
-
-            /*
-            leafletMap.on("click", function (e) {
-                const { lat, lng } = e.latlng;
-                placeMapMarker(lat, lng, `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-            }); 
-            */
+            
             leafletMap.on("click", async function (e) {
-                const { lat, lng } = e.latlng;
+                if (!mapClickEnabled) return;
+                mapClickEnabled = false;
 
-                // Reverse-geocode to get a place name
-                const geoRes = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
-                    { headers: { "Accept-Language": "en" } }
-                );
-                const geoData = await geoRes.json();
+                try {
+                    const { lat, lng } = e.latlng;
+                    const normalizedLng = ((lng + 180) % 360 + 360) % 360 - 180;
 
-                // Extract the best available city name from the response
-                const addr = geoData.address || {};
-                const cityName = addr.neighbourhood?.trim() || addr.suburb?.trim() || addr.city?.trim() || addr.town?.trim() || addr.village?.trim() || addr.county?.trim() || addr.state?.trim(); 
-                const displayLabel = [addr.neighbourhood?.trim() || addr.suburb?.trim() || addr.city?.trim() || addr.town?.trim() || addr.village?.trim() || addr.county?.trim(), addr.state?.trim(), addr.country?.trim()]
-                                    .filter(s => s && s.length > 0).join(", ");
+                    const geoRes = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${normalizedLng}&format=json`,
+                        { headers: { "Accept-Language": "en" } }
+                    );
+                    
+                    const geoData = await geoRes.json();
 
-                // Fetch weather for that location
-                const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(cityName)}`);
-                if (wRes.ok) {
-                    const w = await wRes.json();
-                    lastWeatherData = w;
-                    placeMapMarker(lat, lng, displayLabel, w);
-                } else {
-                    // Fallback: pin without weather if city isn't found
-                    placeMapMarker(lat, lng, displayLabel, null);
+                    const addr = geoData.address || {};
+                    const displayLabel = [
+                        addr.neighbourhood?.trim() || addr.suburb?.trim() || addr.city?.trim() || addr.town?.trim() || addr.village?.trim() || addr.county?.trim(),
+                        addr.state?.trim(),
+                        addr.country?.trim()
+                    ].filter(s => s && s.length > 0).join(", ") || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+
+                    const cityFallbacks = [
+                        addr.city?.trim(),
+                        addr.town?.trim(),
+                        addr.village?.trim(),
+                        addr.county?.trim(),
+                        addr.state?.trim(),
+                        addr.country?.trim()
+                    ].filter(Boolean);
+
+                    let weatherFetched = false;
+                    for (const candidate of cityFallbacks) {
+                        const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(candidate)}`);
+                        if (wRes.ok) {
+                            const w = await wRes.json();
+                            placeMapMarker(lat, lng, displayLabel, w);
+                            weatherFetched = true;
+                            break;
+                        }
+                    }
+                    if (!weatherFetched) placeMapMarker(lat, lng, displayLabel, null);
+
+                } catch (err) {
+                    console.error("Map click error:", err);
+                } finally {
+                    setTimeout(() => mapClickEnabled = true, 5000);
                 }
             });
         }
@@ -1499,6 +1516,7 @@
         });
         loadPreferences();
 
+        /*
         async function updateMapLocation(location) {
             try {
                 const res = await fetch(
@@ -1509,6 +1527,27 @@
                 const { lat, lon, display_name } = data[0];
                 leafletMap.setView([lat, lon], 9);
                 placeMapMarker(lat, lon, display_name, lastWeatherData);
+            } catch (err) {
+                console.error("Map update failed", err);
+            }
+        } */
+
+        async function updateMapLocation(location) {
+            try {
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`
+                );
+                const data = await res.json();
+                if (!data.length) return;
+                const { lat, lon, display_name } = data[0];
+                leafletMap.setView([lat, lon], 9);
+                const wRes = await fetch(`/api/weather/current?city=${encodeURIComponent(location)}`);
+                if (wRes.ok) {
+                    const w = await wRes.json();
+                    placeMapMarker(lat, lon, display_name, w);
+                } else {
+                    placeMapMarker(lat, lon, display_name, null);
+                }
             } catch (err) {
                 console.error("Map update failed", err);
             }
